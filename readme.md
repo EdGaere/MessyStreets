@@ -3,7 +3,7 @@ Edward Gaere and Florian von Wangenheim | June 2026
 
 MESSY STREETS is a benchmark for evaluating geocoders on verbatim web addresses, with existence verification and controlled measurement of surface-form divergence.
 
-MESSY STREETS is released in three tiers of 10K records, each drawn without overlap from the retained records.
+MESSY STREETS is released in three tiers of 10K records, each drawn without overlap from the 16.8M retained records filtered from the 2024 Web Data Commons (see paper for details).
 
 ### Gold Tier
 The gold tier consists of 10K verbatim addresses, each verified for existence, and whose key components have been individually verified for plausibility. In these examples from the gold dataset, note "Italien" in row 3 — that's a live example of the exonym phenomenon occurring in web addresses. 
