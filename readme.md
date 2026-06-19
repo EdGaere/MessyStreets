@@ -1,6 +1,7 @@
 ## MESSY STREETS
 Edward Gaere and Florian von Wangenheim | June 2026
 
+### What is this?
 MESSY STREETS is a benchmark for evaluating geocoders on verbatim web addresses, with existence verification and controlled measurement of surface-form divergence.
 
 MESSY STREETS is released in three tiers of 10K records, each drawn without overlap from the 16.8M retained records filtered from the 2024 Web Data Commons (WDC), See paper for details.
