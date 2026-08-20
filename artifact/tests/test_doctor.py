@@ -155,5 +155,42 @@ class CommandTableTest(unittest.TestCase):
         self.assertEqual(host_side, ["credentials"])
 
 
+
+class WheelsOnlyTest(unittest.TestCase):
+    """Every dependency must ship a prebuilt wheel.
+
+    This is what makes the container build natively on linux/arm64 as well as
+    linux/amd64 without a toolchain, and it is easy to lose: adding one
+    dependency that compiles from source silently reintroduces the builder
+    stage, and only shows up as a slow or failing ARM build much later.
+    """
+
+    def test_every_pin_resolves_to_a_wheel(self):
+        import shutil
+        if shutil.which("pip") is None:
+            self.skipTest("pip not on PATH")
+        with tempfile.TemporaryDirectory() as scratch:
+            proc = subprocess.run(
+                [sys.executable, "-m", "pip", "download", "--only-binary=:all:",
+                 "--no-deps", "--dest", scratch,
+                 "-r", str(REPO / "requirements.txt")],
+                capture_output=True, text=True, timeout=900)
+        if proc.returncode != 0 and "Could not find a version" in proc.stderr:
+            self.fail("a dependency has no wheel and would need a compiler:\n"
+                      + proc.stderr[-1500:])
+        if proc.returncode != 0:
+            self.skipTest(f"pip download unavailable here: {proc.stderr[-200:]}")
+
+    def test_python_geohash_is_not_a_dependency(self):
+        """It was the only source-only package, and nothing imports it."""
+        text = (REPO / "requirements.txt").read_text()
+        self.assertNotIn("python-geohash==", text)
+        hits = subprocess.run(
+            ["grep", "-rn", "--include=*.py", r"^\s*\(from\|import\) geohash\b",
+             "src", "messy_streets"],
+            capture_output=True, text=True, cwd=REPO)
+        self.assertEqual(hits.stdout.strip(), "", "something imports python-geohash")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

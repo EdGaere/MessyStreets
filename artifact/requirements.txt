@@ -16,7 +16,12 @@ diskcache==5.6.3
 # --- geocoding & geospatial ---
 geopy==2.4.1
 pygeohash==3.2.2
-python-geohash==0.8.5
+# python-geohash is deliberately absent. It was pinned in the environment that
+# produced the paper, but nothing in the artefact imports it -- every geohash
+# call goes through pygeohash, which is pure Python. It was also the only
+# dependency without a prebuilt wheel, so dropping it means no compiler is
+# needed on any platform. tests/test_credentials.py is not the place that
+# checks this; tests/test_doctor.py asserts the wheels-only property.
 pycountry==26.2.16
 country_converter==1.3.2
 

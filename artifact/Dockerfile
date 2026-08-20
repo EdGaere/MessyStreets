@@ -1,20 +1,8 @@
 # MESSY STREETS reproduction artefact.
 #
-# Two stages: wheels are compiled once in a builder that has a toolchain
-# (python-geohash 0.8.5 ships no wheels and needs gcc), then installed into a
-# slim runtime that has none. Keeps the image small and identical across
-# linux/amd64 and linux/arm64.
-
-# ---------------------------------------------------------------- builder ---
-FROM python:3.12.3-slim AS builder
-
-RUN apt-get update \
- && apt-get install --no-install-recommends -y build-essential \
- && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /wheels
-COPY requirements.txt .
-RUN pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
+# Single stage, no toolchain. Every pinned dependency has a prebuilt wheel for
+# both linux/amd64 and linux/arm64, so the image builds natively on either
+# without compiling anything.
 
 # ---------------------------------------------------------------- runtime ---
 FROM python:3.12.3-slim
@@ -32,10 +20,14 @@ ENV TZ=UTC \
     MS_ROOT=/opt/messy-streets \
     MS_OUT=/out
 
-COPY --from=builder /wheels /wheels
+# --only-binary=:all: is an assertion, not an optimisation: every dependency
+# has a prebuilt wheel for both linux/amd64 and linux/arm64, so no compiler is
+# needed and the image is identical in shape on either architecture. If a
+# future dependency needs building, this fails loudly rather than silently
+# adding a toolchain.
 COPY requirements.txt /tmp/requirements.txt
-RUN pip install --no-cache-dir --no-index --find-links /wheels -r /tmp/requirements.txt \
- && rm -rf /wheels /tmp/requirements.txt
+RUN pip install --no-cache-dir --only-binary=:all: -r /tmp/requirements.txt \
+ && rm -rf /tmp/requirements.txt
 
 WORKDIR /opt/messy-streets
 COPY pyproject.toml requirements.txt README.md .artefact-revision ./

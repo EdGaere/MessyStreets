@@ -130,7 +130,9 @@ stage-9 repair script query `addresses` only.
 
 ## Requirements
 
-- A container runtime — Docker or podman. Nothing else.
+- A container runtime — Docker or podman. Nothing else. The image builds
+  natively on `linux/amd64` and `linux/arm64`; every dependency ships a
+  prebuilt wheel, so no compiler is involved on either.
 - ~1 GB of disk for the image and the working copy.
 - No GPU, no network, no accounts, for everything except L3.
 

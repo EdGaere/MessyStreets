@@ -120,7 +120,11 @@ class CroissantTest(unittest.TestCase):
                              entry["name"])
 
     def test_validates_against_mlcroissant(self):
-        from mlcroissant import Dataset
+        """mlcroissant is a validation extra, not a runtime dependency."""
+        try:
+            from mlcroissant import Dataset
+        except ImportError:
+            self.skipTest("mlcroissant not installed; CI installs it explicitly")
         Dataset(jsonld=str(REPO / "croissant.json"))
 
     def test_licence_names_all_three_origins(self):
