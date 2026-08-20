@@ -208,6 +208,13 @@ predictions that make offline reproduction possible.
 ./tests/run.sh
 ```
 
+Continuous integration lives at the **repository root**, in
+`.github/workflows/verify.yml`, not inside this directory — GitHub only reads
+workflows from the root of a repository. It runs every verb natively, then
+builds the container image for `linux/amd64` and `linux/arm64` and runs
+`doctor` and `smoke` inside it air-gapped. It triggers only on changes under
+`artifact/`.
+
 63 assertions, no container runtime required. The entrypoint and the wrapper
 are shell, so their real logic — the write probe, the working-copy revision
 stamp, the preflight ladder, which verbs get `--network none` — is driven

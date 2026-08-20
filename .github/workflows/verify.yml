@@ -9,11 +9,19 @@ name: verify
 on:
   push:
     branches: [main]
+    paths: ['artifact/**', '.github/workflows/verify.yml']
   pull_request:
+    paths: ['artifact/**', '.github/workflows/verify.yml']
   workflow_dispatch:
 
 env:
   IMAGE: messy-streets:ci
+
+defaults:
+  run:
+    # The artefact lives in a subdirectory; the released tiers sit at the repo
+    # root beside it. Every `run:` step below works from inside the artefact.
+    working-directory: artifact
 
 jobs:
   native:
@@ -119,7 +127,7 @@ jobs:
       - name: Build
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./artifact
           platforms: ${{ matrix.platform }}
           load: true
           tags: ${{ env.IMAGE }}
