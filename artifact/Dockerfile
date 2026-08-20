@@ -30,14 +30,19 @@ RUN pip install --no-cache-dir --only-binary=:all: -r /tmp/requirements.txt \
  && rm -rf /tmp/requirements.txt
 
 WORKDIR /opt/messy-streets
-COPY pyproject.toml requirements.txt README.md .artefact-revision ./
-COPY messy_streets/ ./messy_streets/
-COPY src/ ./src/
-COPY data/ ./data/
-COPY docker-entrypoint.sh /usr/local/bin/
 
-RUN pip install --no-cache-dir --no-deps -e . \
- && chmod +x /usr/local/bin/docker-entrypoint.sh \
+# Everything the repository tracks, minus what .dockerignore excludes.
+#
+# Deliberately not an enumeration. Listing directories individually left
+# croissant.json out of the image while it was in the checksum manifest, and
+# left LICENSE, LICENSE-DATA and pipeline/ out entirely -- so a reviewer
+# running the container could not read the licence terms, and `pipeline show 9`
+# would have failed on a missing script. `doctor` caught the first of those;
+# the other two it could not see.
+COPY . .
+
+RUN install -m 0755 docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh \
+ && pip install --no-cache-dir --no-deps -e . \
  && mkdir -p /out && chmod 777 /out
 
 # The vendored dependency closure resolves relative to PYTHONPATH, exactly as

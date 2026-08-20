@@ -144,6 +144,18 @@ jobs:
             -v "$PWD/out:/out" \
             "$IMAGE" doctor
 
+      - name: the image carries its licences and its pipeline
+        run: |
+          # Enumerated COPY lines once left croissant.json, LICENSE,
+          # LICENSE-DATA and pipeline/ out of the image. doctor catches only
+          # the checksummed ones, so these are asserted directly.
+          for f in LICENSE LICENSE-DATA ARTIFACT.md croissant.json \
+                   pipeline/09-disjointness/repair.py tests/run.sh tools/audit.py; do
+            docker run --rm --network none --entrypoint test "$IMAGE" -f "/opt/messy-streets/$f" \
+              || { echo "missing from the image: $f" >&2; exit 1; }
+          done
+          echo "licences, pipeline, tests and tools are all in the image"
+
       - name: environment pins are set inside the image
         run: |
           mkdir -p out

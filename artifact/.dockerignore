@@ -1,7 +1,22 @@
+# The image is built with `COPY . .`, so this file is the single place that
+# decides what does not go in. Enumerating COPY lines instead is what let
+# croissant.json, LICENSE, LICENSE-DATA and pipeline/ fall out of the image
+# unnoticed.
+
+# Version control and CI: not needed at runtime.
 .git
 .github
+
+# Build and run output.
 out
 work
 __pycache__
 *.egg-info
+*.pyc
+
+# Credentials never enter an image. The empty template ships; every other
+# variant is excluded, mirroring .gitignore.
+credentials_*.hjson
+credentials.local.hjson
 .env
+*.key
