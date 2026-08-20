@@ -5,12 +5,40 @@ Addresses* (ACM SIGSPATIAL). The benchmark itself — three tiers of 10,000
 verbatim web addresses with verified existence — is described in the paper and
 released alongside this repository.
 
-> **Status: complete.** All eight slices are built. **Both result
-> tables in the paper reproduce offline**, from cached predictions, with no
-> network and no API keys. The dataset-level tables and the construction
-> pipeline arrive with later slices. See *Build progress* below.
+> **Both result tables in the paper reproduce offline** — from predictions
+> recorded when the experiments ran, with no network and no API keys.
 
-## Quick start
+## Build and run
+
+Everything below assumes only Docker (or podman). Nothing else is installed on
+the host.
+
+```sh
+git clone https://github.com/EdGaere/MessyStreets.git
+cd MessyStreets/artifact
+
+docker build -t "$(grep -v '^#' IMAGE | head -1)" .   # ~3 min, no compiler needed
+
+./messy-streets doctor                                # can this machine reproduce anything?
+./messy-streets tables                                # Tables 4 and 5 of the paper, ~4 min
+```
+
+The image is tagged from the `IMAGE` file so the `./messy-streets` wrapper
+finds it. The wrapper checks the host first — runtime, image, mount,
+architecture — then runs the container with the network switched off.
+
+The build needs no toolchain: every pinned dependency ships a prebuilt wheel,
+so it works natively on `linux/amd64` and `linux/arm64` alike.
+
+**Without a container runtime**, the same commands work natively:
+
+```sh
+python3 -m venv .venv && . .venv/bin/activate
+pip install -r requirements.txt && pip install -e .
+messy-streets doctor
+```
+
+## The commands
 
 ```sh
 ./messy-streets doctor    # can this machine reproduce anything?
