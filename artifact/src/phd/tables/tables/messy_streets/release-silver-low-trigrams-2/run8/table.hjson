@@ -1,0 +1,119 @@
+{
+ "table": {
+  "name": "Table 1 (N=100)",
+  "label": "Accuracy of Cloud APIs on geohash prediction at different precision levels, using Messy Streets Silver set with trigrams < 0.42. Run 8 of 10. N=100",
+  "metric": "accuracy",
+  "row_name": "Model",
+  "sort": {
+   "columns": [
+    "Found",
+    1,
+    4,
+    6
+   ],
+   "ascending": false
+  }
+ },
+ "format": {
+  "float": "p1",
+  "bold_rows": false,
+  "caption": "Accuracy of Cloud APIs on geohash prediction at different precision levels, using Messy Streets Silver set with trigrams < 0.42. Run 8 of 10. N=100",
+  "label": "release_silver_low_trigrams_2"
+ },
+ "rows": [
+  {
+   "id": "Nominatim",
+   "label": "Nominatim API",
+   "split": "nominatim"
+  },
+  {
+   "id": "Photon",
+   "label": "Komoot Photon API",
+   "split": "photon"
+  },
+  {
+   "id": "Pelias",
+   "label": "Pelias API",
+   "split": "pelias"
+  },
+  {
+   "id": "Mapbox",
+   "label": "Mapbox API",
+   "split": "mapbox"
+  },
+  {
+   "id": "Google",
+   "label": "Google Maps API v3",
+   "split": "google"
+  },
+  {
+   "id": "here",
+   "label": "Here API v7",
+   "split": "here"
+  },
+  {
+   "id": "azure_maps",
+   "label": "Azure Maps API",
+   "split": "azure"
+  },
+  {
+   "id": "arcgis",
+   "label": "ArcGIS API",
+   "split": "arcgis"
+  },
+  {
+   "id": "opencage",
+   "label": "OpenCage API",
+   "split": "opencage"
+  },
+  {
+   "id": "tomtom",
+   "label": "TomTom API",
+   "split": "tomtom"
+  },
+  {
+   "id": "geoapify",
+   "label": "Geoapify API",
+   "split": "geoapify"
+  },
+  {
+   "id": "mapquest",
+   "label": "MapQuest  API",
+   "split": "geoapify"
+  }
+ ],
+ "columns": [
+  {
+   "id": "geohash1_found",
+   "label": "Found",
+   "data": "address/messy-streets-release-silver-low-trigrams-2/{row}-{column}/run8"
+  },
+  {
+   "id": "geohash1",
+   "label": 1,
+   "data": "address/messy-streets-release-silver-low-trigrams-2/{row}-{column}/run8"
+  },
+  {
+   "id": "geohash2",
+   "label": 2,
+   "hidden": true,
+   "data": "address/messy-streets-release-silver-low-trigrams-2/{row}-{column}/run8"
+  },
+  {
+   "id": "geohash3",
+   "label": 3,
+   "hidden": true,
+   "data": "address/messy-streets-release-silver-low-trigrams-2/{row}-{column}/run8"
+  },
+  {
+   "id": "geohash4",
+   "label": 4,
+   "data": "address/messy-streets-release-silver-low-trigrams-2/{row}-{column}/run8"
+  },
+  {
+   "id": "geohash6",
+   "label": 6,
+   "data": "address/messy-streets-release-silver-low-trigrams-2/{row}-{column}/run8"
+  }
+ ]
+}

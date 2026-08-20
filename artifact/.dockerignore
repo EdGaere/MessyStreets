@@ -1,0 +1,7 @@
+.git
+.github
+out
+work
+__pycache__
+*.egg-info
+.env

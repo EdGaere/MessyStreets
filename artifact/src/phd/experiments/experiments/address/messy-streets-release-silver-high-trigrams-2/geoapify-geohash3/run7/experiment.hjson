@@ -1,0 +1,12 @@
+{
+ "model": {
+  "name": "geoapify",
+  "config": "geohash3"
+ },
+ "benchmark": {
+  "name": "messy_streets/release_silver_high_trigrams_2_geohash3_7",
+  "num_obs": 100,
+  "randomise": false,
+  "comparator": "istr"
+ }
+}

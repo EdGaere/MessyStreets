@@ -1,0 +1,22 @@
+# Reproduction output. Every command writes here and nowhere else.
+/out/
+/work/
+
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+.DS_Store
+
+# Never commit credentials.
+#
+# The template credentials.hjson ships empty and is tracked; every other
+# variant is ignored by default, so a filled-in copy cannot be added by
+# accident — not by `git add -A`, and not by `git add -f` without deliberate
+# effort. The real file belongs outside the repository entirely, at
+# ~/.config/messy-streets/credentials.hjson.
+credentials*.hjson
+!credentials.hjson
+.env
+*.key

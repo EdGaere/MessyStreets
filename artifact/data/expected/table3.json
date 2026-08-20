@@ -1,0 +1,116 @@
+{
+  "analysis_output": {
+    "Country": {
+      "gold": 100.0,
+      "raw": 65.5,
+      "silver": 65.8
+    },
+    "Locality": {
+      "gold": 98.6,
+      "raw": 95.6,
+      "silver": 96.0
+    },
+    "Postcode": {
+      "gold": 100.0,
+      "raw": 80.4,
+      "silver": 83.5
+    },
+    "Region": {
+      "gold": 69.2,
+      "raw": 73.5,
+      "silver": 71.7
+    },
+    "Street": {
+      "gold": 100.0,
+      "raw": 99.9,
+      "silver": 100.0
+    }
+  },
+  "describes": "Address component existence across the three benchmark tiers, in percent.",
+  "disagreements": [
+    {
+      "analysis": 99.9,
+      "component": "Street",
+      "paper": 100.0,
+      "tier": "raw"
+    },
+    {
+      "analysis": 65.5,
+      "component": "Country",
+      "paper": 63.5,
+      "tier": "raw"
+    },
+    {
+      "analysis": 80.4,
+      "component": "Postcode",
+      "paper": 82.2,
+      "tier": "raw"
+    },
+    {
+      "analysis": 96.0,
+      "component": "Locality",
+      "paper": 96.8,
+      "tier": "silver"
+    },
+    {
+      "analysis": 95.6,
+      "component": "Locality",
+      "paper": 95.9,
+      "tier": "raw"
+    },
+    {
+      "analysis": 73.5,
+      "component": "Region",
+      "paper": 76.3,
+      "tier": "raw"
+    }
+  ],
+  "method": "Each cell is the share of records with a non-empty value, over 1,000 observations sampled from a benchmark slice -- not over the full 10,000 records of the released tier. The source database differs by tier: gold from hq_10000 and raw from lq_10000, but silver from mq_1000, a 1,000-record pre-release database rather than the released silver tier.",
+  "paper_label": "tab:components",
+  "paper_table": 3,
+  "provenance": {
+    "gold": {
+      "benchmark": "messy_streets/release_gold_geohash1_1",
+      "database": "hq_10000",
+      "observations": 1000
+    },
+    "raw": {
+      "benchmark": "messy_streets/release_raw_pre_geohash1_1",
+      "database": "lq_10000",
+      "observations": 1000
+    },
+    "silver": {
+      "benchmark": "messy_streets/release_silver_pre_geohash1_1",
+      "database": "mq_1000",
+      "observations": 1000
+    }
+  },
+  "published": {
+    "Country": {
+      "gold": 100.0,
+      "raw": 63.5,
+      "silver": 65.8
+    },
+    "Locality": {
+      "gold": 98.6,
+      "raw": 95.9,
+      "silver": 96.8
+    },
+    "Postcode": {
+      "gold": 100.0,
+      "raw": 82.2,
+      "silver": 83.5
+    },
+    "Region": {
+      "gold": 69.2,
+      "raw": 76.3,
+      "silver": 71.7
+    },
+    "Street": {
+      "gold": 100.0,
+      "raw": 100.0,
+      "silver": 100.0
+    }
+  },
+  "source": "phd/publications/messy_streets/ms.tex"
+}

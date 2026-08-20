@@ -1,0 +1,12 @@
+{
+ "model": {
+  "name": "geoapify",
+  "config": "geohash6"
+ },
+ "benchmark": {
+  "name": "messy_streets/release_gold_geohash6_1",
+  "num_obs": 100,
+  "randomise": false,
+  "comparator": "istr"
+ }
+}

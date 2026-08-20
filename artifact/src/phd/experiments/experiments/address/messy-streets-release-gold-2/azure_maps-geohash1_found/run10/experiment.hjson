@@ -1,0 +1,12 @@
+{
+ "model": {
+  "name": "azure_maps",
+  "config": "geohash1"
+ },
+ "benchmark": {
+  "name": "messy_streets/release_gold_geohash1_10",
+  "num_obs": 100,
+  "randomise": false,
+  "comparator": "has_prediction"
+ }
+}

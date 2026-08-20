@@ -1,0 +1,12 @@
+{
+ "model": {
+  "name": "arcgis",
+  "config": "geohash6"
+ },
+ "benchmark": {
+  "name": "messy_streets/release_gold_geohash6_7",
+  "num_obs": 100,
+  "randomise": false,
+  "comparator": "istr"
+ }
+}

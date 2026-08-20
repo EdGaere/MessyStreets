@@ -1,0 +1,9 @@
+# Container image, pinned by digest.
+#
+# A tag can be moved after publication; a digest cannot. `./messy-streets`
+# refuses to run an image whose digest does not match this file, because
+# silently running different bits is worse than not running at all.
+#
+# Populated by the release workflow. Until the first image is published this
+# file names the tag only, and preflight will say so.
+ghcr.io/edgaere/messy-streets:dev

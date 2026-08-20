@@ -1,0 +1,6 @@
+{ 
+    component : country
+
+    # Google API produces a long_name and a short_name for each prediction
+    component_key : long_name
+}

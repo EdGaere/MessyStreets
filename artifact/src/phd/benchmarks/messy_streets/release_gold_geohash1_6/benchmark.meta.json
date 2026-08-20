@@ -1,0 +1,49 @@
+{
+  "dt": "2026-06-08T17:12:38.795829",
+  "server": "mtec-mis-gpu02",
+  "runtime(hms)": "0:00:00.188437",
+  "script": "/local/home/gaeree/phd/phd/benchmarks/create_benchmark.py",
+  "output": "messy_streets/release_gold_geohash1_6/benchmark.jsonl.gz",
+  "config": {
+    "num_obs": 500,
+    "randomise": false,
+    "batch_size": 1000,
+    "generator": {
+      "base_path": "/local/home/gaeree/phd/phd/datasets/address/messy_streets/v0/generators",
+      "name": "v2.py"
+    },
+    "kwargs": {
+      "databases": [
+        "hq_10000"
+      ],
+      "schemas": [
+        "basic"
+      ],
+      "require_minimum_fields": true,
+      "batch_size": 1000,
+      "seed": "47"
+    },
+    "id": "id",
+    "jsonl": true,
+    "output": "geohash1",
+    "noise": {
+      "level": 0,
+      "prob": 0
+    },
+    "locale_schema": null,
+    "save_aux": true,
+    "missing_data": {
+      "value": "NULL",
+      "skip": true
+    }
+  },
+  "arguments": {
+    "config": "messy_streets/release_gold_geohash1_6",
+    "overwrite": true,
+    "stop_on_overlap": false,
+    "stop_on_error": true,
+    "debug": false,
+    "debug2": false,
+    "debug3": false
+  }
+}

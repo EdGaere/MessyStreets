@@ -1,0 +1,182 @@
+# The artefact's continuous proof that it reproduces.
+#
+# Development happens on a machine with no container runtime, so the image is
+# built and exercised here. A green run means: the image builds on both
+# architectures, and every verb built so far behaves inside it.
+
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  IMAGE: messy-streets:ci
+
+jobs:
+  native:
+    name: native (no container)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.3'
+
+      - name: Install pinned dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+
+      - name: doctor
+        env:
+          TZ: UTC
+          LANG: C.UTF-8
+          PYTHONHASHSEED: '0'
+          MS_DUCKDB_THREADS: '1'
+        run: messy-streets doctor
+
+      - name: smoke
+        env:
+          TZ: UTC
+          LANG: C.UTF-8
+          PYTHONHASHSEED: '0'
+          MS_DUCKDB_THREADS: '1'
+        run: messy-streets smoke
+
+      - name: tables — reproduce Tables 4 and 5
+        env:
+          TZ: UTC
+          LANG: C.UTF-8
+          PYTHONHASHSEED: '0'
+          MS_DUCKDB_THREADS: '1'
+        run: messy-streets tables
+
+      - name: stats — dataset-level figures
+        env: {TZ: UTC, LANG: C.UTF-8, PYTHONHASHSEED: '0', MS_DUCKDB_THREADS: '1'}
+        run: messy-streets stats
+
+      - name: sample — slice provenance
+        env: {TZ: UTC, LANG: C.UTF-8, PYTHONHASHSEED: '0', MS_DUCKDB_THREADS: '1'}
+        run: messy-streets sample
+
+      - name: pipeline — Table 2 and tier disjointness
+        env: {TZ: UTC, LANG: C.UTF-8, PYTHONHASHSEED: '0', MS_DUCKDB_THREADS: '1'}
+        run: |
+          messy-streets pipeline
+          messy-streets pipeline show 3
+          messy-streets pipeline show 9
+
+      - name: geocode — plan only, never queries
+        env: {TZ: UTC, LANG: C.UTF-8, PYTHONHASHSEED: '0', MS_DUCKDB_THREADS: '1'}
+        run: messy-streets geocode
+
+      - name: croissant metadata validates
+        run: python -m pip install mlcroissant==1.1.0 && python tools/croissant.py --check
+
+      - name: credentials — status only, never a value
+        run: messy-streets credentials
+
+      - name: doctor reports no failures
+        env:
+          TZ: UTC
+          LANG: C.UTF-8
+          PYTHONHASHSEED: '0'
+          MS_DUCKDB_THREADS: '1'
+        run: |
+          messy-streets doctor --json > doctor.json
+          python - <<'PY'
+          import json, sys
+          report = json.load(open("doctor.json"))
+          failed = [c for c in report["checks"] if c["status"] == "fail"]
+          if failed:
+              for c in failed:
+                  print(f"FAIL {c['group']}/{c['name']}: {c['detail']}", file=sys.stderr)
+              sys.exit(1)
+          print(f"{report['summary']['total']} checks, 0 failures")
+          PY
+
+      - name: Test suite
+        run: ./tests/run.sh
+
+  container:
+    name: container (${{ matrix.platform }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [linux/amd64, linux/arm64]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: ${{ matrix.platform }}
+          load: true
+          tags: ${{ env.IMAGE }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: doctor, air-gapped
+        run: |
+          mkdir -p out
+          docker run --rm \
+            --network none \
+            --user "$(id -u):$(id -g)" \
+            --read-only --tmpfs /tmp \
+            -v "$PWD/out:/out" \
+            "$IMAGE" doctor
+
+      - name: environment pins are set inside the image
+        run: |
+          mkdir -p out
+          docker run --rm --network none \
+            --user "$(id -u):$(id -g)" --read-only --tmpfs /tmp \
+            -v "$PWD/out:/out" "$IMAGE" doctor --json > doctor.json
+          python3 - <<'PY'
+          import json, sys
+          checks = {c["name"]: c for c in json.load(open("doctor.json"))["checks"]}
+          for name in ("TZ", "LANG", "PYTHONHASHSEED", "MS_DUCKDB_THREADS"):
+              status = checks[name]["status"]
+              if status != "ok":
+                  print(f"{name} is {status} inside the image: {checks[name]['detail']}", file=sys.stderr)
+                  sys.exit(1)
+          print("all environment pins clean inside the image")
+          PY
+
+      - name: output is owned by the caller, not root
+        run: |
+          test -d out/work || { echo "entrypoint did not create the working copy" >&2; exit 1; }
+          owner="$(stat -c '%u' out/work)"
+          test "$owner" = "$(id -u)" || {
+            echo "out/work owned by uid $owner, expected $(id -u)" >&2; exit 1; }
+          echo "working copy owned by uid $owner"
+
+      - name: smoke, air-gapped
+        run: |
+          mkdir -p out
+          docker run --rm --network none \
+            --user "$(id -u):$(id -g)" --read-only --tmpfs /tmp \
+            -v "$PWD/out:/out" "$IMAGE" smoke
+
+      - name: image cannot be mutated by a run
+        run: |
+          docker run --rm --network none \
+            --user "$(id -u):$(id -g)" --read-only --tmpfs /tmp \
+            -v "$PWD/out:/out" "$IMAGE" doctor >/dev/null
+          # A second run must reuse the working copy rather than rebuild it.
+          docker run --rm --network none \
+            --user "$(id -u):$(id -g)" --read-only --tmpfs /tmp \
+            -v "$PWD/out:/out" "$IMAGE" doctor 2>&1 | tee second.log
+          grep -q "preparing working copy" second.log && {
+            echo "working copy was rebuilt on the second run" >&2; exit 1; }
+          echo "working copy reused"

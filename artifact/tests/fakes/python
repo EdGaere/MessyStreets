@@ -1,0 +1,6 @@
+#!/bin/sh
+# Stub interpreter, so the entrypoint can be run without the real CLI.
+printf 'PYTHON_ARGS=%s\n' "$*"
+printf 'MS_ROOT=%s\n' "${MS_ROOT:-}"
+printf 'MS_OUT=%s\n' "${MS_OUT:-}"
+printf 'PYTHONPATH=%s\n' "${PYTHONPATH:-}"

@@ -1,0 +1,65 @@
+{
+  "describes": "Run 1 of the 10 runs aggregated into Table 4 of the paper (\\label{tab:address_gold}, gold tier, twelve geocoders). These are the intermediate per-run values, not the published means: the paper reports mean +/- 2 SEM over all 10 runs, which `messy-streets tables` reproduces.",
+  "observations_per_cell": 100,
+  "paper_label": "tab:address_gold",
+  "source": "phd/tables/tables/messy_streets/release-gold-2/run1/rendered.json",
+  "table": "messy_streets/release-gold-2/run1",
+  "values": {
+    "Found": {
+      "ArcGIS API": 1.0,
+      "Azure Maps API": 0.99,
+      "Geoapify API": 1.0,
+      "Google Maps API v3": 1.0,
+      "Here API v7": 1.0,
+      "Komoot Photon API": 0.89,
+      "MapQuest  API": 1.0,
+      "Mapbox API": 1.0,
+      "Nominatim API": 0.62,
+      "OpenCage API": 1.0,
+      "Pelias API": 0.95,
+      "TomTom API": 0.95
+    },
+    "Geohash 1 (+/- 2'500 km)": {
+      "ArcGIS API": 1.0,
+      "Azure Maps API": 0.99,
+      "Geoapify API": 0.99,
+      "Google Maps API v3": 1.0,
+      "Here API v7": 1.0,
+      "Komoot Photon API": 0.89,
+      "MapQuest  API": 1.0,
+      "Mapbox API": 0.99,
+      "Nominatim API": 0.62,
+      "OpenCage API": 0.98,
+      "Pelias API": 0.94,
+      "TomTom API": 0.95
+    },
+    "Geohash 4 (+/- 20 km)": {
+      "ArcGIS API": 0.98,
+      "Azure Maps API": 0.97,
+      "Geoapify API": 0.94,
+      "Google Maps API v3": 0.99,
+      "Here API v7": 0.97,
+      "Komoot Photon API": 0.83,
+      "MapQuest  API": 0.97,
+      "Mapbox API": 0.93,
+      "Nominatim API": 0.6,
+      "OpenCage API": 0.9,
+      "Pelias API": 0.87,
+      "TomTom API": 0.94
+    },
+    "Geohash 6 (+/- 0.6 km)": {
+      "ArcGIS API": 0.83,
+      "Azure Maps API": 0.83,
+      "Geoapify API": 0.82,
+      "Google Maps API v3": 0.85,
+      "Here API v7": 0.81,
+      "Komoot Photon API": 0.57,
+      "MapQuest  API": 0.81,
+      "Mapbox API": 0.76,
+      "Nominatim API": 0.51,
+      "OpenCage API": 0.64,
+      "Pelias API": 0.67,
+      "TomTom API": 0.81
+    }
+  }
+}

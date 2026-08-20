@@ -1,0 +1,12 @@
+{
+ "model": {
+  "name": "pelias",
+  "config": "geohash1"
+ },
+ "benchmark": {
+  "name": "messy_streets/release_gold_high_trigrams_2_geohash1_4",
+  "num_obs": 100,
+  "randomise": false,
+  "comparator": "has_prediction"
+ }
+}

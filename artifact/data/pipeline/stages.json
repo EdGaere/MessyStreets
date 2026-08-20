@@ -1,0 +1,211 @@
+{
+  "describes": "The fifteen stages that produced MESSY STREETS, from 136 billion N-Quads to two LaTeX tables. Most are documented rather than runnable: reproducing them needs 106 GB of reference data and four GPUs. Recording them is the point \u2014 the construction method is inspectable even where re-running it is not.",
+  "stages": [
+    {
+      "n": 1,
+      "title": "Download the Web Data Commons corpus",
+      "code": [
+        "phd/datasets/address/schema_org/v2/wget.py",
+        "run_all_classes.sh"
+      ],
+      "inputs": "webdatacommons.org, December 2024 release, 50 schema.org classes",
+      "outputs": "Class-specific N-Quad archives",
+      "scale": "136.7 bn quads",
+      "needs": "bulk download, days",
+      "runnable": false,
+      "note": "Third-party corpus. Not redistributed."
+    },
+    {
+      "n": 2,
+      "title": "Parse N-Quads and join address to geo",
+      "code": [
+        "phd/datasets/address/schema_org/v2/filter_addr_geo.py"
+      ],
+      "inputs": "N-Quad archives",
+      "outputs": "Per-class TSV: subject, streetAddress, latitude, longitude",
+      "scale": "330,646,780 records with an address; 95,014,529 with coordinates",
+      "needs": "CPU only",
+      "runnable": false,
+      "note": "Needs stage 1's output."
+    },
+    {
+      "n": 3,
+      "title": "Assemble and apply the filter cascade",
+      "code": [
+        "phd/datasets/address/schema_org/generators/schema_org_v2.py"
+      ],
+      "inputs": "Per-class TSV",
+      "outputs": "dataset.jsonl.gz (908 MB) and dataset.stats.json",
+      "scale": "16,868,598 retained records",
+      "needs": "CPU only",
+      "runnable": false,
+      "verifies": "Table 2",
+      "note": "The stats file IS Table 2. It is shipped at data/pipeline/wdc-filter-stats.json and checked by `messy-streets pipeline show 3`."
+    },
+    {
+      "n": 4,
+      "title": "Extract OpenAddresses streets",
+      "code": [
+        "phd/datasets/address/openaddresses/v0/extract_streets.py"
+      ],
+      "inputs": "OpenAddresses S3 bucket",
+      "outputs": "~36M streets",
+      "scale": "10.7 GB as DuckDB",
+      "needs": "network, S3 egress cost",
+      "runnable": false
+    },
+    {
+      "n": 5,
+      "title": "Rebuild OpenStreetMap streets",
+      "code": [
+        "phd/datasets/address/openstreetdata/v1/streets.sh",
+        "exract_borders.py",
+        "admin_level_mapping.tsv"
+      ],
+      "inputs": "OSM planet extract, Geofabrik",
+      "outputs": "~51M streets with bounding boxes",
+      "scale": "89.5 GB as DuckDB",
+      "needs": "osmium, days of processing",
+      "runnable": false,
+      "note": "Method adapted from openstreetdata.org."
+    },
+    {
+      "n": 6,
+      "title": "Load each source into DuckDB, ordered by geohash10",
+      "code": [
+        "phd/datasets/address/messy_streets/v0/load_jsonl_to_duckdb.py",
+        "openaddresses/v0/sampler.py",
+        "openstreetdata/v1/sampler.py"
+      ],
+      "inputs": "Stages 3, 4, 5",
+      "outputs": "wdc 6.2 GB, oa 10.7 GB, osd 89.5 GB",
+      "scale": "106 GB",
+      "needs": "disk",
+      "runnable": false,
+      "note": "The geohash ordering is what makes the prefix join tractable. Without this stage there is no existence check."
+    },
+    {
+      "n": 7,
+      "title": "Build the tiers: geohash-6 match plus LLM judges",
+      "code": [
+        "phd/datasets/address/messy_streets/v0/build.py",
+        "phd/datasets/address/messy_streets/v0/configs/*.hjson"
+      ],
+      "inputs": "wdc, oa, osd databases; Ollama endpoint",
+      "outputs": "hq_10000, mq_10000, lq_10000 \u2014 each with an addresses and a discarded table",
+      "scale": "28K candidates evaluated for 10K gold records",
+      "needs": "106 GB of reference data, quantised 35B judge on 4 GPUs",
+      "runnable": false,
+      "note": "Three judge roles: street similarity, component validity, and PII \u2014 the PII judge runs six times, once per address field."
+    },
+    {
+      "n": 8,
+      "title": "Rejection accounting",
+      "code": [
+        "phd/datasets/address/messy_streets/v0/duckdb_sql.py"
+      ],
+      "inputs": "The discarded table of each tier",
+      "outputs": "Rejection rates by reason",
+      "scale": "64% gold, 27% silver, 0.4% PII",
+      "needs": "a tier database",
+      "runnable": false,
+      "note": "The released tiers ship without their discarded tables, so the rates cannot be recomputed here."
+    },
+    {
+      "n": 9,
+      "title": "Disjointness repair",
+      "code": [
+        "pipeline/09-disjointness/repair.py"
+      ],
+      "inputs": "hq_10000, mq_10000, lq_10000 and the 1K tiers",
+      "outputs": "Three tiers of exactly 10,000 mutually disjoint records",
+      "scale": "5 replacements for gold, 15 for silver, 2 for raw",
+      "needs": "all six tier databases",
+      "runnable": "partially",
+      "note": "Existed only as ~30 hand-run DuckDB statements transcribed in a readme. Written as a deterministic script for this artefact \u2014 see the directory. `messy-streets sample` shows what its absence cost: nine addresses appear in a benchmark slice but not in the released tier."
+    },
+    {
+      "n": 10,
+      "title": "Divergence scoring and the split threshold",
+      "code": [
+        "phd/datasets/address/messy_streets/v0/generators/v3.py"
+      ],
+      "inputs": "A tier database plus oa and osd for the reference address",
+      "outputs": "Jaccard, trigram and Levenshtein similarity distributions",
+      "scale": "median trigram overlap 0.42, hardcoded into the divergence configs",
+      "needs": "106 GB of reference data",
+      "runnable": false,
+      "note": "The tier database stores the matched reference street in aux, but the generator re-queries oa/osd by id, so the big databases are still required."
+    },
+    {
+      "n": 11,
+      "title": "Descriptive statistics",
+      "code": [
+        "phd/datasets/address/messy_streets/v0/generators/v3.py"
+      ],
+      "inputs": "A benchmark slice",
+      "outputs": "Component existence, script, continent, region",
+      "scale": "1,000 observations per figure",
+      "needs": "a tier database",
+      "runnable": true,
+      "verifies": "Table 3, Biases paragraph",
+      "note": "`messy-streets stats` recomputes these over all 10,000 released records and disagrees with the paper \u2014 see ARTIFACT.md."
+    },
+    {
+      "n": 12,
+      "title": "Benchmark slicing",
+      "code": [
+        "phd/benchmarks/create_benchmark.py"
+      ],
+      "inputs": "A tier database",
+      "outputs": "10 runs x 100 addresses x 7 precisions per tier",
+      "scale": "seed 42; 170 slices shipped",
+      "needs": "a tier database",
+      "runnable": "partially",
+      "verifies": "the inputs to Tables 4 and 5",
+      "note": "Regeneration is not bit-identical: DuckDB's REPEATABLE sampling is version-dependent. `messy-streets sample` checks provenance instead."
+    },
+    {
+      "n": 13,
+      "title": "Geocoder evaluation",
+      "code": [
+        "phd/experiments/run_experiment.py",
+        "phd/models/models/*/model.py"
+      ],
+      "inputs": "Benchmark slices; twelve geocoder APIs",
+      "outputs": "Per-observation predictions",
+      "scale": "~420,000 nominal calls, ~5 days serial",
+      "needs": "eleven API keys, network",
+      "runnable": "with keys",
+      "note": "Raw responses were cached per provider; only the derived geohash predictions are shipped."
+    },
+    {
+      "n": 14,
+      "title": "Table build",
+      "code": [
+        "phd/tables/build_table.py",
+        "phd/tables/error_bars.py"
+      ],
+      "inputs": "Cached predictions",
+      "outputs": "Per-run tables, then mean +/- 2 SEM, then LaTeX",
+      "scale": "80 published cells",
+      "needs": "nothing beyond the artefact",
+      "runnable": true,
+      "verifies": "Tables 4 and 5",
+      "note": "`messy-streets tables` reproduces 78 of 80 published cells."
+    },
+    {
+      "n": 15,
+      "title": "Nominatim failure analysis",
+      "code": [
+        "analysis/nominatim-manual/"
+      ],
+      "inputs": "Twenty unmatched gold-tier addresses",
+      "outputs": "A worked table plus twenty screenshots",
+      "scale": "20 addresses",
+      "needs": "manual inspection",
+      "runnable": false,
+      "note": "Manual by design: each address was re-queried by hand through the API and the web UI. Evidence, not code."
+    }
+  ]
+}

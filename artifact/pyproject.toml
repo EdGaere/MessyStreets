@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "messy-streets"
+version = "1.0.0"
+description = "Reproduction artefact for MESSY STREETS: A Benchmark for Geocoding Real-World Addresses"
+readme = "README.md"
+requires-python = "==3.12.*"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Edward Gaere", email = "egaere@ethz.ch" },
+    { name = "Florian von Wangenheim", email = "fwangenheim@ethz.ch" },
+]
+keywords = ["geocoding", "benchmark", "reproducibility", "spatial data quality"]
+
+# Intentionally empty. The CLI is stdlib-only so that `doctor` can diagnose a
+# broken dependency install; the reproduction pipeline's own dependencies are
+# pinned exactly in requirements.txt and installed separately.
+dependencies = []
+
+[project.scripts]
+messy-streets = "messy_streets.cli:main"
+
+[tool.setuptools]
+packages = ["messy_streets"]
+
+[tool.setuptools.package-data]
+messy_streets = ["verbs.tsv"]

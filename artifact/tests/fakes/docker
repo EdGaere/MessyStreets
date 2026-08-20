@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Stub container runtime. Lets the wrapper's preflight ladder be exercised on a
+# machine with no Docker, by simulating each state it is supposed to detect.
+#
+#   FAKE_DAEMON=down|up        `docker info` fails or succeeds
+#   FAKE_HAS_IMAGE=0|1         image present locally
+#   FAKE_CAN_PULL=0|1          `docker pull` succeeds
+#   FAKE_ARCH=amd64|arm64      architecture reported for the image
+#   FAKE_NETNONE=0|1           `--network none` supported
+#   FAKE_RUN_LOG=<path>        final `docker run` argv is written here
+case "$1" in
+  --version) echo "Docker version 99.0.0-fake, build fake" ;;
+  info)      [ "${FAKE_DAEMON:-up}" = up ] || exit 1 ;;
+  image)
+    case "$2" in
+      inspect)
+        [ "${FAKE_HAS_IMAGE:-1}" = 1 ] || exit 1
+        # --format '{{.Architecture}}' asks for the arch
+        case " $* " in *Architecture*) echo "${FAKE_ARCH:-amd64}" ;; esac
+        ;;
+    esac
+    ;;
+  pull)      [ "${FAKE_CAN_PULL:-1}" = 1 ] || exit 1 ;;
+  run)
+    # The isolation probe ends in `true`; anything else is the real run.
+    if [ "${@: -1}" = "true" ]; then
+      [ "${FAKE_NETNONE:-1}" = 1 ] || exit 1
+      exit 0
+    fi
+    [ -n "${FAKE_RUN_LOG:-}" ] && printf '%s\n' "$@" > "$FAKE_RUN_LOG"
+    exit 0
+    ;;
+  *) exit 0 ;;
+esac

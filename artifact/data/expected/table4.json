@@ -1,0 +1,295 @@
+{
+  "describes": "Candidate Return Rate and geohash accuracy of twelve geocoders on the gold tier, in percent. Mean +/- 2 SEM over 10 runs of 100 addresses.",
+  "known_deviations": [
+    {
+      "column": "Found",
+      "note": "Rebuilding from the shipped predictions yields 96.7 where the paper prints 96.6. Every other cell in Tables 4 and 5 matches exactly. The cause was not investigated; the deviation is 0.1 percentage points, within the printed precision, and does not affect any claim in the paper. Declared here so it reports as a known deviation rather than as a failure -- and so that a *change* to it still fails.",
+      "observed_mean": 96.7,
+      "observed_sem": 1.8,
+      "published_mean": 96.6,
+      "published_sem": 1.8,
+      "row": "Pelias API"
+    },
+    {
+      "column": "Geohash 1 (+/- 2'500 km)",
+      "note": "Same cause as the row above.",
+      "observed_mean": 94.2,
+      "observed_sem": 2.4,
+      "published_mean": 94.1,
+      "published_sem": 2.5,
+      "row": "Pelias API"
+    }
+  ],
+  "paper_label": "tab:address_gold",
+  "paper_table": 4,
+  "rebuilt_from": {
+    "messy_streets/release-gold-2-error-bars": "all columns"
+  },
+  "source": "phd/publications/messy_streets/Tables/release-gold-2-error-bars.tex",
+  "values": {
+    "ArcGIS API": {
+      "CRR": {
+        "mean": 99.8,
+        "rebuilt_column": "Found",
+        "sem": 0.3
+      },
+      "GH1": {
+        "mean": 99.8,
+        "rebuilt_column": "Geohash 1 (+/- 2'500 km)",
+        "sem": 0.3
+      },
+      "GH4": {
+        "mean": 97.9,
+        "rebuilt_column": "Geohash 4 (+/- 20 km)",
+        "sem": 1.3
+      },
+      "GH6": {
+        "mean": 85.3,
+        "rebuilt_column": "Geohash 6 (+/- 0.6 km)",
+        "sem": 2.8
+      }
+    },
+    "Azure Maps API": {
+      "CRR": {
+        "mean": 97.2,
+        "rebuilt_column": "Found",
+        "sem": 0.8
+      },
+      "GH1": {
+        "mean": 97.1,
+        "rebuilt_column": "Geohash 1 (+/- 2'500 km)",
+        "sem": 0.9
+      },
+      "GH4": {
+        "mean": 94.8,
+        "rebuilt_column": "Geohash 4 (+/- 20 km)",
+        "sem": 1.5
+      },
+      "GH6": {
+        "mean": 81.3,
+        "rebuilt_column": "Geohash 6 (+/- 0.6 km)",
+        "sem": 3.7
+      }
+    },
+    "Geoapify API": {
+      "CRR": {
+        "mean": 99.7,
+        "rebuilt_column": "Found",
+        "sem": 0.4
+      },
+      "GH1": {
+        "mean": 99.2,
+        "rebuilt_column": "Geohash 1 (+/- 2'500 km)",
+        "sem": 0.5
+      },
+      "GH4": {
+        "mean": 96.3,
+        "rebuilt_column": "Geohash 4 (+/- 20 km)",
+        "sem": 1.2
+      },
+      "GH6": {
+        "mean": 79.1,
+        "rebuilt_column": "Geohash 6 (+/- 0.6 km)",
+        "sem": 3.7
+      }
+    },
+    "Google Maps API v3": {
+      "CRR": {
+        "mean": 100.0,
+        "rebuilt_column": "Found",
+        "sem": 0.0
+      },
+      "GH1": {
+        "mean": 100.0,
+        "rebuilt_column": "Geohash 1 (+/- 2'500 km)",
+        "sem": 0.0
+      },
+      "GH4": {
+        "mean": 98.6,
+        "rebuilt_column": "Geohash 4 (+/- 20 km)",
+        "sem": 0.7
+      },
+      "GH6": {
+        "mean": 88.3,
+        "rebuilt_column": "Geohash 6 (+/- 0.6 km)",
+        "sem": 2.0
+      }
+    },
+    "Here API v7": {
+      "CRR": {
+        "mean": 99.1,
+        "rebuilt_column": "Found",
+        "sem": 0.6
+      },
+      "GH1": {
+        "mean": 99.0,
+        "rebuilt_column": "Geohash 1 (+/- 2'500 km)",
+        "sem": 0.5
+      },
+      "GH4": {
+        "mean": 97.6,
+        "rebuilt_column": "Geohash 4 (+/- 20 km)",
+        "sem": 0.5
+      },
+      "GH6": {
+        "mean": 85.1,
+        "rebuilt_column": "Geohash 6 (+/- 0.6 km)",
+        "sem": 2.0
+      }
+    },
+    "Komoot Photon API": {
+      "CRR": {
+        "mean": 88.1,
+        "rebuilt_column": "Found",
+        "sem": 1.0
+      },
+      "GH1": {
+        "mean": 88.0,
+        "rebuilt_column": "Geohash 1 (+/- 2'500 km)",
+        "sem": 1.1
+      },
+      "GH4": {
+        "mean": 84.9,
+        "rebuilt_column": "Geohash 4 (+/- 20 km)",
+        "sem": 1.1
+      },
+      "GH6": {
+        "mean": 62.8,
+        "rebuilt_column": "Geohash 6 (+/- 0.6 km)",
+        "sem": 2.5
+      }
+    },
+    "MapQuest  API": {
+      "CRR": {
+        "mean": 100.0,
+        "rebuilt_column": "Found",
+        "sem": 0.0
+      },
+      "GH1": {
+        "mean": 98.5,
+        "rebuilt_column": "Geohash 1 (+/- 2'500 km)",
+        "sem": 0.5
+      },
+      "GH4": {
+        "mean": 97.1,
+        "rebuilt_column": "Geohash 4 (+/- 20 km)",
+        "sem": 0.5
+      },
+      "GH6": {
+        "mean": 84.0,
+        "rebuilt_column": "Geohash 6 (+/- 0.6 km)",
+        "sem": 1.5
+      }
+    },
+    "Mapbox API": {
+      "CRR": {
+        "mean": 99.1,
+        "rebuilt_column": "Found",
+        "sem": 0.5
+      },
+      "GH1": {
+        "mean": 98.6,
+        "rebuilt_column": "Geohash 1 (+/- 2'500 km)",
+        "sem": 0.7
+      },
+      "GH4": {
+        "mean": 95.1,
+        "rebuilt_column": "Geohash 4 (+/- 20 km)",
+        "sem": 1.5
+      },
+      "GH6": {
+        "mean": 81.0,
+        "rebuilt_column": "Geohash 6 (+/- 0.6 km)",
+        "sem": 2.9
+      }
+    },
+    "Nominatim API": {
+      "CRR": {
+        "mean": 68.2,
+        "rebuilt_column": "Found",
+        "sem": 4.3
+      },
+      "GH1": {
+        "mean": 68.2,
+        "rebuilt_column": "Geohash 1 (+/- 2'500 km)",
+        "sem": 4.3
+      },
+      "GH4": {
+        "mean": 66.6,
+        "rebuilt_column": "Geohash 4 (+/- 20 km)",
+        "sem": 4.7
+      },
+      "GH6": {
+        "mean": 55.6,
+        "rebuilt_column": "Geohash 6 (+/- 0.6 km)",
+        "sem": 3.6
+      }
+    },
+    "OpenCage API": {
+      "CRR": {
+        "mean": 98.4,
+        "rebuilt_column": "Found",
+        "sem": 1.0
+      },
+      "GH1": {
+        "mean": 97.4,
+        "rebuilt_column": "Geohash 1 (+/- 2'500 km)",
+        "sem": 1.0
+      },
+      "GH4": {
+        "mean": 90.2,
+        "rebuilt_column": "Geohash 4 (+/- 20 km)",
+        "sem": 1.8
+      },
+      "GH6": {
+        "mean": 68.2,
+        "rebuilt_column": "Geohash 6 (+/- 0.6 km)",
+        "sem": 2.9
+      }
+    },
+    "Pelias API": {
+      "CRR": {
+        "mean": 96.6,
+        "rebuilt_column": "Found",
+        "sem": 1.8
+      },
+      "GH1": {
+        "mean": 94.1,
+        "rebuilt_column": "Geohash 1 (+/- 2'500 km)",
+        "sem": 2.5
+      },
+      "GH4": {
+        "mean": 85.9,
+        "rebuilt_column": "Geohash 4 (+/- 20 km)",
+        "sem": 3.3
+      },
+      "GH6": {
+        "mean": 67.8,
+        "rebuilt_column": "Geohash 6 (+/- 0.6 km)",
+        "sem": 4.4
+      }
+    },
+    "TomTom API": {
+      "CRR": {
+        "mean": 94.0,
+        "rebuilt_column": "Found",
+        "sem": 1.3
+      },
+      "GH1": {
+        "mean": 93.9,
+        "rebuilt_column": "Geohash 1 (+/- 2'500 km)",
+        "sem": 1.4
+      },
+      "GH4": {
+        "mean": 91.8,
+        "rebuilt_column": "Geohash 4 (+/- 20 km)",
+        "sem": 1.7
+      },
+      "GH6": {
+        "mean": 79.4,
+        "rebuilt_column": "Geohash 6 (+/- 0.6 km)",
+        "sem": 3.6
+      }
+    }
+  }
+}

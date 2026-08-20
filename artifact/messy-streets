@@ -1,0 +1,215 @@
+#!/usr/bin/env bash
+# messy-streets — run the reproduction artefact.
+#
+# This wrapper is the half of `doctor` that cannot run inside the container.
+# If the image never pulled, the daemon is down, or the bind mount is
+# read-only, nothing inside can report it — the reviewer would see a failure
+# with no way to tell whether the problem is their Docker, their mount, or the
+# artefact. So the host is checked first, and only then do we exec inwards.
+#
+#   ./messy-streets credentials    show/set the geocoder API keys (runs on the host)
+#   ./messy-streets doctor          check everything and report
+#   ./messy-streets --preflight     host checks only, no container
+#   ./messy-streets tables          rebuild the paper's tables
+#   MS_NATIVE=1 ./messy-streets …   skip the container, use the local install
+
+set -euo pipefail
+
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+OUT_DIR="${MS_OUT_DIR:-$HERE/out}"
+VERBS="$HERE/messy_streets/verbs.tsv"
+
+warn()  { printf '  %-14s warn  %s\n' "$1" "$2" >&2; }
+ok()    { printf '  %-14s ok    %s\n' "$1" "$2" >&2; }
+fail()  { printf '  %-14s FAIL  %s\n' "$1" "$2" >&2; PREFLIGHT_FAILED=1; }
+hint()  { printf '                       %s\n' "$1" >&2; }
+
+PREFLIGHT_FAILED=0
+RUNTIME=""
+EXTRA_RUN_ARGS=()
+
+# --- image pin -------------------------------------------------------------
+image_ref() {
+    grep -v '^[[:space:]]*#' "$HERE/IMAGE" | grep -v '^[[:space:]]*$' | head -n1 | tr -d '[:space:]'
+}
+
+# --- verb lookup -----------------------------------------------------------
+verb_field() {  # verb_field <verb> <column>
+    awk -F'\t' -v v="$1" -v c="$2" '!/^#/ && NF && $1==v {print $c; found=1} END{if(!found) exit 1}' "$VERBS"
+}
+
+# --- preflight -------------------------------------------------------------
+preflight() {
+    printf 'host\n' >&2
+
+    # 1. container runtime present
+    if command -v docker >/dev/null 2>&1; then
+        RUNTIME=docker
+    elif command -v podman >/dev/null 2>&1; then
+        RUNTIME=podman
+    else
+        fail "runtime" "neither docker nor podman found on PATH"
+        hint "Install Docker Desktop or podman, or run natively:"
+        hint "  pip install -r requirements.txt && pip install -e . && MS_NATIVE=1 ./messy-streets doctor"
+        return
+    fi
+    ok "runtime" "$RUNTIME ($("$RUNTIME" --version 2>/dev/null | head -n1))"
+
+    # 2. daemon reachable
+    if ! "$RUNTIME" info >/dev/null 2>&1; then
+        fail "daemon" "$RUNTIME is installed but not responding"
+        hint "Start Docker Desktop, or: sudo systemctl start docker"
+        return
+    fi
+    ok "daemon" "responding"
+
+    # 3. image resolves, and by digest rather than a movable tag
+    local ref; ref="$(image_ref)"
+    if [[ "$ref" != *"@sha256:"* ]]; then
+        warn "image" "$ref is pinned by tag, not digest"
+        hint "A tag can be moved after publication. Release builds pin a digest."
+    fi
+    if "$RUNTIME" image inspect "$ref" >/dev/null 2>&1; then
+        ok "image" "$ref present locally"
+    elif "$RUNTIME" pull --quiet "$ref" >/dev/null 2>&1; then
+        ok "image" "$ref pulled"
+    else
+        fail "image" "cannot resolve $ref"
+        hint "No network, or the image is not published yet."
+        hint "Build it locally:  $RUNTIME build -t $ref ."
+        return
+    fi
+
+    # 4. output mount exists and round-trips ownership
+    mkdir -p "$OUT_DIR" 2>/dev/null || true
+    if [[ ! -w "$OUT_DIR" ]]; then
+        fail "mount" "$OUT_DIR is not writable"
+        return
+    fi
+    ok "mount" "$OUT_DIR writable"
+
+    # 5. SELinux relabelling — a missing :Z looks exactly like a bug in us
+    if command -v getenforce >/dev/null 2>&1 && [[ "$(getenforce 2>/dev/null)" == "Enforcing" ]]; then
+        EXTRA_RUN_ARGS+=("--security-opt" "label=disable")
+        ok "selinux" "enforcing — adding :Z to the mount"
+        MOUNT_SUFFIX=":Z"
+    else
+        MOUNT_SUFFIX=""
+    fi
+
+    # 6. architecture — emulation is slow and occasionally wrong
+    local host_arch image_arch
+    host_arch="$(uname -m)"
+    case "$host_arch" in
+        x86_64|amd64)  host_arch=amd64 ;;
+        aarch64|arm64) host_arch=arm64 ;;
+    esac
+    image_arch="$("$RUNTIME" image inspect --format '{{.Architecture}}' "$ref" 2>/dev/null || echo unknown)"
+    if [[ "$image_arch" == "unknown" ]]; then
+        warn "architecture" "could not determine image architecture"
+    elif [[ "$image_arch" == "$host_arch" ]]; then
+        ok "architecture" "$host_arch, native"
+    else
+        warn "architecture" "image is $image_arch on a $host_arch host — running under emulation"
+        hint "Results stay correct but runtimes in the README will not match."
+    fi
+
+    # 7. network isolation actually available
+    if "$RUNTIME" run --rm --network none "$ref" true >/dev/null 2>&1; then
+        ok "isolation" "--network none supported"
+    else
+        warn "isolation" "could not verify --network none"
+        hint "Offline reproduction is asserted by isolation; without it, it is only claimed."
+    fi
+}
+
+# --- credentials file ------------------------------------------------------
+# Lives on the host, outside the repository, so no git operation can reach it.
+# --credentials overrides it; MS_CREDENTIALS overrides the default.
+CREDENTIALS="${MS_CREDENTIALS:-${XDG_CONFIG_HOME:-$HOME/.config}/messy-streets/credentials.hjson}"
+ARGS=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --credentials) CREDENTIALS="$2"; shift 2 ;;
+        --credentials=*) CREDENTIALS="${1#*=}"; shift ;;
+        *) ARGS+=("$1"); shift ;;
+    esac
+done
+set -- "${ARGS[@]}"
+
+# --- native escape hatch ---------------------------------------------------
+if [[ "${MS_NATIVE:-0}" == "1" ]]; then
+    exec env MS_CREDENTIALS="$CREDENTIALS" python3 -m messy_streets "$@"
+fi
+
+# --- host-side verbs -------------------------------------------------------
+# `credentials` writes the file, which is on the host and deliberately outside
+# anything the container can reach. So it runs here, like the preflight above.
+if [[ "${1:-}" == "credentials" ]]; then
+    exec env MS_CREDENTIALS="$CREDENTIALS" PYTHONPATH="$HERE${PYTHONPATH:+:$PYTHONPATH}" \
+        python3 -m messy_streets "$@"
+fi
+
+# --- dispatch --------------------------------------------------------------
+if [[ "${1:-}" == "--preflight" ]]; then
+    preflight
+    if [[ "$PREFLIGHT_FAILED" == "1" ]]; then
+        echo >&2
+        echo "preflight failed — the container cannot run here." >&2
+        exit 2
+    fi
+    echo >&2
+    echo "preflight ok." >&2
+    exit 0
+fi
+
+VERB="${1:-}"
+if [[ -z "$VERB" || "$VERB" == "-h" || "$VERB" == "--help" ]]; then
+    VERB="--help"
+    NETWORK="none"
+elif ! NETWORK="$(verb_field "$VERB" 2)"; then
+    echo "messy-streets: unknown command '$VERB'" >&2
+    echo "Try: ./messy-streets --help" >&2
+    exit 64
+fi
+
+preflight
+if [[ "$PREFLIGHT_FAILED" == "1" ]]; then
+    echo >&2
+    echo "preflight failed — not starting the container." >&2
+    exit 2
+fi
+echo >&2
+
+# Offline verbs are run with the network switched off. For them this is not a
+# precaution but an assertion: if the offline claim were ever quietly wrong,
+# the command fails rather than silently reaching out.
+NET_ARGS=()
+if [[ "$NETWORK" == "none" ]]; then
+    NET_ARGS=(--network none)
+fi
+
+# geocode is the only verb that needs credentials. The file is mounted
+# read-only rather than passed with --env-file: --env-file puts the values into
+# the container's configuration, where `docker inspect` shows them to anyone
+# with Docker access for as long as the run lasts.
+ENV_ARGS=()
+if [[ "$NETWORK" == "host" ]]; then
+    if [[ -f "$CREDENTIALS" ]]; then
+        ENV_ARGS=(-v "$CREDENTIALS:/run/messy-streets/credentials.hjson:ro"
+                  -e "MS_CREDENTIALS=/run/messy-streets/credentials.hjson")
+    else
+        echo "  no credentials file at $CREDENTIALS" >&2
+        echo "  keyless providers still work; ./messy-streets credentials --set <provider> adds one" >&2
+    fi
+fi
+
+exec "$RUNTIME" run --rm -it \
+    "${NET_ARGS[@]}" \
+    "${ENV_ARGS[@]}" \
+    "${EXTRA_RUN_ARGS[@]}" \
+    --user "$(id -u):$(id -g)" \
+    --read-only --tmpfs /tmp \
+    -v "$OUT_DIR:/out${MOUNT_SUFFIX:-}" \
+    "$(image_ref)" \
+    "$@"

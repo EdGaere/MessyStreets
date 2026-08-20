@@ -1,0 +1,119 @@
+{
+ "table": {
+  "name": "Table 1 (N=100)",
+  "label": "Accuracy of Cloud APIs on geohash prediction at different precision levels, using Messy Streets Gold set. Run 10 of 10. N=100",
+  "metric": "accuracy",
+  "row_name": "Model",
+  "sort": {
+   "columns": [
+    "Found",
+    "Geohash 1 (+/- 2'500 km)",
+    "Geohash 4 (+/- 20 km)",
+    "Geohash 6 (+/- 0.6 km)"
+   ],
+   "ascending": false
+  }
+ },
+ "format": {
+  "float": "p1",
+  "bold_rows": false,
+  "caption": "Accuracy of Cloud APIs on geohash prediction at different precision levels, using Messy Streets Gold set. Run 10 of 10. N=100",
+  "label": "release_gold_1"
+ },
+ "rows": [
+  {
+   "id": "Nominatim",
+   "label": "Nominatim API",
+   "split": "nominatim"
+  },
+  {
+   "id": "Photon",
+   "label": "Komoot Photon API",
+   "split": "photon"
+  },
+  {
+   "id": "Pelias",
+   "label": "Pelias API",
+   "split": "pelias"
+  },
+  {
+   "id": "Mapbox",
+   "label": "Mapbox API",
+   "split": "mapbox"
+  },
+  {
+   "id": "Google",
+   "label": "Google Maps API v3",
+   "split": "google"
+  },
+  {
+   "id": "here",
+   "label": "Here API v7",
+   "split": "here"
+  },
+  {
+   "id": "azure_maps",
+   "label": "Azure Maps API",
+   "split": "azure"
+  },
+  {
+   "id": "arcgis",
+   "label": "ArcGIS API",
+   "split": "arcgis"
+  },
+  {
+   "id": "opencage",
+   "label": "OpenCage API",
+   "split": "opencage"
+  },
+  {
+   "id": "tomtom",
+   "label": "TomTom API",
+   "split": "tomtom"
+  },
+  {
+   "id": "geoapify",
+   "label": "Geoapify API",
+   "split": "geoapify"
+  },
+  {
+   "id": "mapquest",
+   "label": "MapQuest  API",
+   "split": "geoapify"
+  }
+ ],
+ "columns": [
+  {
+   "id": "geohash1_found",
+   "label": "Found",
+   "data": "address/messy-streets-release-gold-2/{row}-{column}/run10"
+  },
+  {
+   "id": "geohash1",
+   "label": "Geohash 1 (+/- 2'500 km)",
+   "data": "address/messy-streets-release-gold-2/{row}-{column}/run10"
+  },
+  {
+   "id": "geohash2",
+   "hidden": true,
+   "label": 2,
+   "data": "address/messy-streets-release-gold-2/{row}-{column}/run10"
+  },
+  {
+   "id": "geohash3",
+   "hidden": true,
+   "label": 3,
+   "data": "address/messy-streets-release-gold-2/{row}-{column}/run10"
+  },
+  {
+   "id": "geohash4",
+   "label": "Geohash 4 (+/- 20 km)",
+   "data": "address/messy-streets-release-gold-2/{row}-{column}/run10"
+  },
+  {
+   "id": "geohash6",
+   "label": "Geohash 6 (+/- 0.6 km)",
+   "data": "address/messy-streets-release-gold-2/{row}-{column}/run10"
+  }
+ ]
+}

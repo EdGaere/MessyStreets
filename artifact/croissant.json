@@ -1,0 +1,573 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "cr": "http://mlcommons.org/croissant/",
+    "sc": "https://schema.org/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "jsonPath": "cr:jsonPath",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "name": "MESSY-STREETS",
+  "description": "A benchmark for evaluating geocoders on verbatim real-world web addresses. Three tiers of 10,000 records each, drawn without overlap from 16.9M address records filtered from the December 2024 Web Data Commons corpus, with reference locations verified against OpenAddresses and OpenStreetMap. Unlike benchmarks built from clean or synthetically perturbed data, every address is retained exactly as it appeared on the web, including missing, duplicated, misspelled and malformed components.",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "version": "1.0.0",
+  "datePublished": "2026-08-19",
+  "citation": "Gaere, E. and von Wangenheim, F. MESSY STREETS: A Benchmark for Geocoding Real-World Addresses. ACM SIGSPATIAL.",
+  "keywords": [
+    "geocoding",
+    "address",
+    "benchmark",
+    "spatial data quality",
+    "web data commons"
+  ],
+  "license": "Code: MIT. Data: OpenStreetMap-derived fields (7,842 records) under ODbL 1.0, (c) OpenStreetMap contributors; OpenAddresses-derived fields under their per-source terms; address records from Web Data Commons. See LICENSE and LICENSE-DATA.",
+  "creditText": "Contains information from OpenStreetMap, (c) OpenStreetMap contributors, available under the Open Database License 1.0 (https://www.openstreetmap.org/copyright), and from OpenAddresses (https://openaddresses.io/) under its per-source terms.",
+  "url": "https://github.com/EdGaere/MessyStreets",
+  "citeAs": "Gaere, E. and von Wangenheim, F. MESSY STREETS: A Benchmark for Geocoding Real-World Addresses. ACM SIGSPATIAL.",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Edward Gaere",
+      "affiliation": {
+        "@type": "sc:Organization",
+        "name": "ETH Zurich"
+      }
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Florian von Wangenheim",
+      "affiliation": {
+        "@type": "sc:Organization",
+        "name": "ETH Zurich"
+      }
+    }
+  ],
+  "distribution": [
+    {
+      "@type": "sc:FileObject",
+      "@id": "gold-tier",
+      "name": "gold-tier",
+      "description": "10,000 verbatim web addresses, each verified to exist against OpenAddresses or OpenStreetMap, with street, country and postcode individually validated. 10,000 records.",
+      "contentUrl": "data/tiers/gold.jsonl.gz",
+      "encodingFormat": "application/jsonlines+gzip",
+      "sha256": "532cc4a8ebb7a9da743adfd53b79eaaf39ccb0911dffe561c7ba20c00cc0a07a"
+    },
+    {
+      "@type": "sc:FileObject",
+      "@id": "silver-tier",
+      "name": "silver-tier",
+      "description": "10,000 existence-verified addresses whose individual components are not validated. Same construction as the gold tier without the component judge. 10,000 records.",
+      "contentUrl": "data/tiers/silver.jsonl.gz",
+      "encodingFormat": "application/jsonlines+gzip",
+      "sha256": "5349fd11207481ba8c895e87805b860a79aee0e571c88f797aabc9fe7cbe2f02"
+    },
+    {
+      "@type": "sc:FileObject",
+      "@id": "raw-tier",
+      "name": "raw-tier",
+      "description": "10,000 addresses requiring only a street component. Neither existence-verified nor component-validated; released for reference. 10,000 records.",
+      "contentUrl": "data/tiers/raw.jsonl.gz",
+      "encodingFormat": "application/jsonlines+gzip",
+      "sha256": "1fa72a1e970ba87adcf2e65a52466ffcd2021e2cc34babfa4f942a6a771b0006"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "@id": "gold-records",
+      "name": "gold-records",
+      "description": "10,000 verbatim web addresses, each verified to exist against OpenAddresses or OpenStreetMap, with street, country and postcode individually validated.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "gold-records/streetAddress",
+          "name": "streetAddress",
+          "description": "Street address, verbatim as found in the source page.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "gold-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.streetAddress"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "gold-records/addressLocality",
+          "name": "addressLocality",
+          "description": "Locality or city, verbatim. May be absent.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "gold-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.addressLocality"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "gold-records/addressRegion",
+          "name": "addressRegion",
+          "description": "Region, state or province, verbatim. May be absent.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "gold-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.addressRegion"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "gold-records/postalCode",
+          "name": "postalCode",
+          "description": "Postal code, verbatim. May be absent.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "gold-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.postalCode"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "gold-records/addressCountry",
+          "name": "addressCountry",
+          "description": "Country, verbatim and in any language. May be absent.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "gold-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.addressCountry"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "gold-records/postOfficeBoxNumber",
+          "name": "postOfficeBoxNumber",
+          "description": "PO box, verbatim. Usually absent.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "gold-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.postOfficeBoxNumber"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "gold-records/latitude",
+          "name": "latitude",
+          "description": "Reference latitude, from the source page's schema.org/geo.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "gold-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.latitude"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "gold-records/longitude",
+          "name": "longitude",
+          "description": "Reference longitude, from the source page's schema.org/geo.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "gold-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.longitude"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "gold-records/input",
+          "name": "input",
+          "description": "The address as submitted to a geocoder: the components concatenated, verbatim.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "gold-tier"
+            },
+            "extract": {
+              "jsonPath": "$.input"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "gold-records/target",
+          "name": "target",
+          "description": "Reference location as a geohash at precision 10.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "gold-tier"
+            },
+            "extract": {
+              "jsonPath": "$.target"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "silver-records",
+      "name": "silver-records",
+      "description": "10,000 existence-verified addresses whose individual components are not validated. Same construction as the gold tier without the component judge.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "silver-records/streetAddress",
+          "name": "streetAddress",
+          "description": "Street address, verbatim as found in the source page.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "silver-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.streetAddress"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "silver-records/addressLocality",
+          "name": "addressLocality",
+          "description": "Locality or city, verbatim. May be absent.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "silver-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.addressLocality"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "silver-records/addressRegion",
+          "name": "addressRegion",
+          "description": "Region, state or province, verbatim. May be absent.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "silver-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.addressRegion"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "silver-records/postalCode",
+          "name": "postalCode",
+          "description": "Postal code, verbatim. May be absent.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "silver-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.postalCode"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "silver-records/addressCountry",
+          "name": "addressCountry",
+          "description": "Country, verbatim and in any language. May be absent.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "silver-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.addressCountry"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "silver-records/postOfficeBoxNumber",
+          "name": "postOfficeBoxNumber",
+          "description": "PO box, verbatim. Usually absent.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "silver-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.postOfficeBoxNumber"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "silver-records/latitude",
+          "name": "latitude",
+          "description": "Reference latitude, from the source page's schema.org/geo.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "silver-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.latitude"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "silver-records/longitude",
+          "name": "longitude",
+          "description": "Reference longitude, from the source page's schema.org/geo.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "silver-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.longitude"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "silver-records/input",
+          "name": "input",
+          "description": "The address as submitted to a geocoder: the components concatenated, verbatim.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "silver-tier"
+            },
+            "extract": {
+              "jsonPath": "$.input"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "silver-records/target",
+          "name": "target",
+          "description": "Reference location as a geohash at precision 10.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "silver-tier"
+            },
+            "extract": {
+              "jsonPath": "$.target"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "raw-records",
+      "name": "raw-records",
+      "description": "10,000 addresses requiring only a street component. Neither existence-verified nor component-validated; released for reference.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "raw-records/streetAddress",
+          "name": "streetAddress",
+          "description": "Street address, verbatim as found in the source page.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "raw-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.streetAddress"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "raw-records/addressLocality",
+          "name": "addressLocality",
+          "description": "Locality or city, verbatim. May be absent.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "raw-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.addressLocality"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "raw-records/addressRegion",
+          "name": "addressRegion",
+          "description": "Region, state or province, verbatim. May be absent.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "raw-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.addressRegion"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "raw-records/postalCode",
+          "name": "postalCode",
+          "description": "Postal code, verbatim. May be absent.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "raw-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.postalCode"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "raw-records/addressCountry",
+          "name": "addressCountry",
+          "description": "Country, verbatim and in any language. May be absent.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "raw-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.addressCountry"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "raw-records/postOfficeBoxNumber",
+          "name": "postOfficeBoxNumber",
+          "description": "PO box, verbatim. Usually absent.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "raw-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.postOfficeBoxNumber"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "raw-records/latitude",
+          "name": "latitude",
+          "description": "Reference latitude, from the source page's schema.org/geo.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "raw-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.latitude"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "raw-records/longitude",
+          "name": "longitude",
+          "description": "Reference longitude, from the source page's schema.org/geo.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "raw-tier"
+            },
+            "extract": {
+              "jsonPath": "$.aux.address.longitude"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "raw-records/input",
+          "name": "input",
+          "description": "The address as submitted to a geocoder: the components concatenated, verbatim.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "raw-tier"
+            },
+            "extract": {
+              "jsonPath": "$.input"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "raw-records/target",
+          "name": "target",
+          "description": "Reference location as a geohash at precision 10.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "raw-tier"
+            },
+            "extract": {
+              "jsonPath": "$.target"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+ "model": {
+  "name": "pelias",
+  "config": "geohash4"
+ },
+ "benchmark": {
+  "name": "messy_streets/release_silver_low_trigrams_2_geohash4_5",
+  "num_obs": 100,
+  "randomise": false,
+  "comparator": "istr"
+ }
+}

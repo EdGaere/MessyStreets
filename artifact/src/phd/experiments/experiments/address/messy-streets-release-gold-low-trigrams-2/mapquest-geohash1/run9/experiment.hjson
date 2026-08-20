@@ -1,0 +1,12 @@
+{
+ "model": {
+  "name": "openmapquest",
+  "config": "geohash1"
+ },
+ "benchmark": {
+  "name": "messy_streets/release_gold_low_trigrams_2_geohash1_9",
+  "num_obs": 100,
+  "randomise": false,
+  "comparator": "istr"
+ }
+}

@@ -1,0 +1,16 @@
+# MESSY STREETS command table — single source of truth.
+# Read by messy_streets/cli.py (Python) and by ./messy-streets (bash).
+# Columns: verb <TAB> network <TAB> layer <TAB> slice <TAB> description
+#   network : none = must run air-gapped; host = needs network access
+#   layer   : reproducibility layer from ARTIFACT.md (- = not a layer)
+#   slice   : build slice that implements it (see README); 0 = not yet built
+doctor	none	-	1	Check the environment and report what is available here
+credentials	host-side	-	9	Show, set or clear the geocoder API keys
+smoke	none	L1	2	Rebuild one table from cached predictions
+tables	none	L1	3	Rebuild both paper tables and diff against the shipped LaTeX
+stats	none	L0	4	Recompute the component-existence and distribution figures
+inspect	none	L0	4	Print records from a tier with reference address and divergence
+sample	none	L2	5	Regenerate the benchmark slices at seed 42 and checksum them
+pipeline	none	L4	6	List, show or run the fifteen dataset-construction stages
+geocode	host	L3	7	Re-query the live geocoders (requires your own API keys)
+shell	none	-	8	Open a prompt inside the container

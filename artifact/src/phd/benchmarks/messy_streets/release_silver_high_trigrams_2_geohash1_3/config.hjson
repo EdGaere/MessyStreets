@@ -1,0 +1,36 @@
+{
+ "num_obs": 500,
+ "randomise": false,
+ "batch_size": 1000,
+ "generator": {
+  "base_path": "/local/home/gaeree/phd/phd/datasets/address/messy_streets/v0/generators",
+  "name": "v3.py"
+ },
+ "kwargs": {
+  "databases": [
+   "mq_10000"
+  ],
+  "schemas": [
+   "basic"
+  ],
+  "require_minimum_fields": true,
+  "batch_size": 1000,
+  "seed": "44",
+  "filters": [
+   "trigram_1 > 0.42"
+  ]
+ },
+ "id": "id",
+ "jsonl": true,
+ "output": "geohash1",
+ "noise": {
+  "level": 0,
+  "prob": 0
+ },
+ "locale_schema": null,
+ "save_aux": true,
+ "missing_data": {
+  "value": "NULL",
+  "skip": true
+ }
+}

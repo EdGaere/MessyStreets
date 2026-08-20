@@ -1,0 +1,50 @@
+/*
+release-silver-high-trigrams-2-error-bars: error bars on silver set with high-trigram overlap betwene WDC and canonical address, for publication
+
+CREATED
+edward | 2026-06-11
+
+USAGE
+python3 error_bars.py messy_streets/release-silver-high-trigrams-2-error-bars
+
+*/
+
+{  
+    table : { 
+        name : "Table 1 (N=100)"
+
+        "sort": {
+            "columns": [
+                "Found",
+                "1",
+                "4",
+                "6"
+            ],
+            "ascending": false
+        }
+
+    }
+
+    format : {
+        decimals : 1
+
+        caption : "Recall and accuracy of Geocoder APIs on MESSY STREETS Silver Tier with high-trigram overlap betwene WDC and canonical address. Each Geocoder is run 10 times. Recall is shown in column Found, accuracy is measured at 3 precision levels in the columns Geohash 1, 4 and 6. Each run draws a fresh set of 100 addresses; the set is identical for all libraries and all models for direct comparison. Mean +/-2 SEM computed over the 10 runs, 1,000 addresses in total. Rows sorted by descending recall then accuracy. Best result in bold."
+
+
+        # reference the table in the Latex document using see Tables \ref{datetime_translation}
+        label : "address_gold_2"
+    }
+
+    tables : [
+        "messy_streets/release-silver-high-trigrams-2/run1"
+        "messy_streets/release-silver-high-trigrams-2/run2"
+        "messy_streets/release-silver-high-trigrams-2/run3"
+        "messy_streets/release-silver-high-trigrams-2/run4"
+        "messy_streets/release-silver-high-trigrams-2/run5"
+        "messy_streets/release-silver-high-trigrams-2/run6"
+        "messy_streets/release-silver-high-trigrams-2/run7"
+        "messy_streets/release-silver-high-trigrams-2/run8"
+        "messy_streets/release-silver-high-trigrams-2/run9"
+        "messy_streets/release-silver-high-trigrams-2/run10"
+    ]
+}

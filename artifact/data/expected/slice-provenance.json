@@ -1,0 +1,105 @@
+{
+  "count": 9,
+  "describes": "Records that appear in a shipped benchmark slice but not in the released gold tier. The slices are what the experiments ran against and are shipped verbatim; the tier was edited afterwards by the disjointness repair (pipeline stage 9), which deletes cross-tier overlaps and inserts replacements. Declared so the provenance check reports them as known rather than failing, and so a change to the set still fails.",
+  "records": [
+    {
+      "id": "10578583",
+      "in_deleted_table": true,
+      "input": "115 Dulwich Road London  Se24 0ng. United Kingdom",
+      "slices": [
+        "release_gold_geohash1_7",
+        "release_gold_geohash4_7",
+        "release_gold_geohash6_7"
+      ]
+    },
+    {
+      "id": "10624798",
+      "in_deleted_table": false,
+      "input": "Am Buchenberg 1 Ilmenau OT Pennewitz Th\u00fcringen 98694 Germany",
+      "slices": [
+        "release_gold_geohash1_10",
+        "release_gold_geohash1_8",
+        "release_gold_geohash4_10",
+        "release_gold_geohash4_8",
+        "release_gold_geohash6_10",
+        "release_gold_geohash6_8"
+      ]
+    },
+    {
+      "id": "10660120",
+      "in_deleted_table": false,
+      "input": "Loteria, 2 Bilbao Vizcaya 48005 ES",
+      "slices": [
+        "release_gold_geohash1_8",
+        "release_gold_geohash4_8",
+        "release_gold_geohash6_8"
+      ]
+    },
+    {
+      "id": "12630113",
+      "in_deleted_table": false,
+      "input": "6730 Niagara Falls Boulevard, Route 62 Niagara Falls New York 14304 USA",
+      "slices": [
+        "release_gold_geohash1_3",
+        "release_gold_geohash1_9",
+        "release_gold_geohash4_3",
+        "release_gold_geohash4_9",
+        "release_gold_geohash6_3",
+        "release_gold_geohash6_9"
+      ]
+    },
+    {
+      "id": "15553429",
+      "in_deleted_table": false,
+      "input": "98/12 Tr\u01b0\u01a1ng \u0110\u0103ng Qu\u1ebf, ph\u01b0\u1eddng 3, qu\u1eadn G\u00f2 V\u1ea5p H\u1ed3 Ch\u00ed Minh G\u00f2 V\u1ea5p 70000 VN",
+      "slices": [
+        "release_gold_geohash1_2",
+        "release_gold_geohash4_2",
+        "release_gold_geohash6_2"
+      ]
+    },
+    {
+      "id": "16278422",
+      "in_deleted_table": false,
+      "input": "Kleine Stra\u00dfe 14 Hasede Niedersachsen 31180 Germany",
+      "slices": [
+        "release_gold_geohash1_8",
+        "release_gold_geohash4_8",
+        "release_gold_geohash6_8"
+      ]
+    },
+    {
+      "id": "16712711",
+      "in_deleted_table": false,
+      "input": "3370 Pineridge Circle Kissimmee Florida 34746 United States",
+      "slices": [
+        "release_gold_geohash1_2",
+        "release_gold_geohash4_2",
+        "release_gold_geohash6_2"
+      ]
+    },
+    {
+      "id": "174703",
+      "in_deleted_table": true,
+      "input": "3 rue Bernard Bourg-en-Bresse Auvergne-Rh\u00f4ne-Alpes 01000 FR",
+      "slices": [
+        "release_gold_geohash1_8",
+        "release_gold_geohash4_8",
+        "release_gold_geohash6_8"
+      ]
+    },
+    {
+      "id": "8422496",
+      "in_deleted_table": false,
+      "input": "17 Oak St Manchester Manchester M4 5JD GB",
+      "slices": [
+        "release_gold_geohash1_10",
+        "release_gold_geohash1_4",
+        "release_gold_geohash4_10",
+        "release_gold_geohash4_4",
+        "release_gold_geohash6_10",
+        "release_gold_geohash6_4"
+      ]
+    }
+  ]
+}

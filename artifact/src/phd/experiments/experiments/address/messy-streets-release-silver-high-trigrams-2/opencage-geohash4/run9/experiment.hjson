@@ -1,0 +1,12 @@
+{
+ "model": {
+  "name": "opencage",
+  "config": "geohash4"
+ },
+ "benchmark": {
+  "name": "messy_streets/release_silver_high_trigrams_2_geohash4_9",
+  "num_obs": 100,
+  "randomise": false,
+  "comparator": "istr"
+ }
+}

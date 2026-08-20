@@ -1,0 +1,73 @@
+Licensing and attribution for the released data
+===============================================
+
+This file covers everything under data/ — the three benchmark tiers, the tier
+databases, the benchmark slices and the cached geocoder predictions. The
+software is under the MIT licence; see LICENSE.
+
+The data has three distinct origins and they carry different terms.
+
+
+1. OpenStreetMap-derived fields — ODbL 1.0
+------------------------------------------
+
+  © OpenStreetMap contributors
+  https://www.openstreetmap.org/copyright
+
+7,842 records in the gold and silver tiers were verified against
+OpenStreetMap, drawn from 7,689 distinct OSM ways. For those records the
+following fields, nested under `aux.existence` where `aux.existence.source`
+is `"osd"`, are derived from OpenStreetMap and are made available under the
+Open Database License 1.0:
+
+  osm_id          the OSM way identifier, retained so provenance is explicit
+  street_name     the street name as it appears in OpenStreetMap
+  geometry        the way geometry, as WKT LINESTRING
+  country, province, county, city, district, suburb, postal_code and the
+                  other administrative fields of the same object
+
+The ODbL text is at https://opendatacommons.org/licenses/odbl/1-0/
+
+Street extraction follows the method published at https://openstreetdata.org
+
+Any redistribution of these fields, or of a database derived from them, must
+preserve this attribution and the ODbL terms.
+
+
+2. OpenAddresses-derived fields — per-source terms
+--------------------------------------------------
+
+  https://openaddresses.io/
+
+12,158 records were verified against OpenAddresses instead. For those, the
+fields nested under `aux.existence` where `aux.existence.source` is `"oa"`
+are derived from OpenAddresses. OpenAddresses aggregates government and other
+open sources whose licences differ by source; each record retains its
+`oa_source` field so the originating source can be identified, and its terms
+consulted.
+
+
+3. The address records themselves — Web Data Commons
+-----------------------------------------------------
+
+  http://webdatacommons.org/structureddata/
+
+The 30,000 address records are extracted verbatim from the December 2024 Web
+Data Commons corpus, which is itself derived from Common Crawl. They are
+published here for research use, in the form in which they appeared on the
+web.
+
+Records were filtered by a language model for personally identifiable
+information across all six address fields before release; the candidates that
+filter rejected are not included in this distribution.
+
+
+Status of the ODbL classification
+---------------------------------
+
+A request was sent to the OpenStreetMap Foundation Licensing Working Group on
+20 August 2026 asking whether this arrangement — full attribution and an
+explicit ODbL notice on the OSM-derived fields, with way identifiers retained
+— is compliant as described. No response has been received at the time of
+writing. This file states the plan that was put to them; it will be updated if
+their answer calls for a change.

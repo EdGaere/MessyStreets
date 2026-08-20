@@ -1,0 +1,230 @@
+{
+  "describes": "CRR and GH6 by component verification and surface-form divergence. High divergence means LOW trigram overlap with the canonical form.",
+  "paper_label": "tab:effect_summary",
+  "paper_table": 5,
+  "rebuilt_from": {
+    "messy_streets/release-gold-high-trigrams-2-error-bars": "gold, low divergence",
+    "messy_streets/release-gold-low-trigrams-2-error-bars": "gold, high divergence",
+    "messy_streets/release-silver-high-trigrams-2-error-bars": "silver, low divergence",
+    "messy_streets/release-silver-low-trigrams-2-error-bars": "silver, high divergence"
+  },
+  "source": "phd/publications/messy_streets/Tables/effect_summary.tex",
+  "values": {
+    "Google Maps API v3": {
+      "gold": {
+        "High divergence CRR": {
+          "mean": 100.0,
+          "rebuilt_column": "Found",
+          "rebuilt_table": "messy_streets/release-gold-low-trigrams-2-error-bars",
+          "sem": 0.0
+        },
+        "High divergence GH6": {
+          "mean": 84.5,
+          "rebuilt_column": "6",
+          "rebuilt_table": "messy_streets/release-gold-low-trigrams-2-error-bars",
+          "sem": 1.8
+        },
+        "Low divergence CRR": {
+          "mean": 100.0,
+          "rebuilt_column": "Found",
+          "rebuilt_table": "messy_streets/release-gold-high-trigrams-2-error-bars",
+          "sem": 0.0
+        },
+        "Low divergence GH6": {
+          "mean": 90.8,
+          "rebuilt_column": "6",
+          "rebuilt_table": "messy_streets/release-gold-high-trigrams-2-error-bars",
+          "sem": 1.1
+        }
+      },
+      "silver": {
+        "High divergence CRR": {
+          "mean": 100.0,
+          "rebuilt_column": "Found",
+          "rebuilt_table": "messy_streets/release-silver-low-trigrams-2-error-bars",
+          "sem": 0.0
+        },
+        "High divergence GH6": {
+          "mean": 81.4,
+          "rebuilt_column": "6",
+          "rebuilt_table": "messy_streets/release-silver-low-trigrams-2-error-bars",
+          "sem": 1.5
+        },
+        "Low divergence CRR": {
+          "mean": 100.0,
+          "rebuilt_column": "Found",
+          "rebuilt_table": "messy_streets/release-silver-high-trigrams-2-error-bars",
+          "sem": 0.0
+        },
+        "Low divergence GH6": {
+          "mean": 89.8,
+          "rebuilt_column": "6",
+          "rebuilt_table": "messy_streets/release-silver-high-trigrams-2-error-bars",
+          "sem": 1.8
+        }
+      }
+    },
+    "Komoot Photon API": {
+      "gold": {
+        "High divergence CRR": {
+          "mean": 81.4,
+          "rebuilt_column": "Found",
+          "rebuilt_table": "messy_streets/release-gold-low-trigrams-2-error-bars",
+          "sem": 1.7
+        },
+        "High divergence GH6": {
+          "mean": 54.9,
+          "rebuilt_column": "6",
+          "rebuilt_table": "messy_streets/release-gold-low-trigrams-2-error-bars",
+          "sem": 2.3
+        },
+        "Low divergence CRR": {
+          "mean": 94.2,
+          "rebuilt_column": "Found",
+          "rebuilt_table": "messy_streets/release-gold-high-trigrams-2-error-bars",
+          "sem": 1.4
+        },
+        "Low divergence GH6": {
+          "mean": 70.5,
+          "rebuilt_column": "6",
+          "rebuilt_table": "messy_streets/release-gold-high-trigrams-2-error-bars",
+          "sem": 3.8
+        }
+      },
+      "silver": {
+        "High divergence CRR": {
+          "mean": 80.2,
+          "rebuilt_column": "Found",
+          "rebuilt_table": "messy_streets/release-silver-low-trigrams-2-error-bars",
+          "sem": 2.7
+        },
+        "High divergence GH6": {
+          "mean": 50.7,
+          "rebuilt_column": "6",
+          "rebuilt_table": "messy_streets/release-silver-low-trigrams-2-error-bars",
+          "sem": 2.9
+        },
+        "Low divergence CRR": {
+          "mean": 94.2,
+          "rebuilt_column": "Found",
+          "rebuilt_table": "messy_streets/release-silver-high-trigrams-2-error-bars",
+          "sem": 1.0
+        },
+        "Low divergence GH6": {
+          "mean": 72.3,
+          "rebuilt_column": "6",
+          "rebuilt_table": "messy_streets/release-silver-high-trigrams-2-error-bars",
+          "sem": 3.4
+        }
+      }
+    },
+    "Nominatim API": {
+      "gold": {
+        "High divergence CRR": {
+          "mean": 59.3,
+          "rebuilt_column": "Found",
+          "rebuilt_table": "messy_streets/release-gold-low-trigrams-2-error-bars",
+          "sem": 2.4
+        },
+        "High divergence GH6": {
+          "mean": 47.5,
+          "rebuilt_column": "6",
+          "rebuilt_table": "messy_streets/release-gold-low-trigrams-2-error-bars",
+          "sem": 3.3
+        },
+        "Low divergence CRR": {
+          "mean": 75.9,
+          "rebuilt_column": "Found",
+          "rebuilt_table": "messy_streets/release-gold-high-trigrams-2-error-bars",
+          "sem": 3.1
+        },
+        "Low divergence GH6": {
+          "mean": 64.4,
+          "rebuilt_column": "6",
+          "rebuilt_table": "messy_streets/release-gold-high-trigrams-2-error-bars",
+          "sem": 2.6
+        }
+      },
+      "silver": {
+        "High divergence CRR": {
+          "mean": 51.3,
+          "rebuilt_column": "Found",
+          "rebuilt_table": "messy_streets/release-silver-low-trigrams-2-error-bars",
+          "sem": 3.2
+        },
+        "High divergence GH6": {
+          "mean": 38.9,
+          "rebuilt_column": "6",
+          "rebuilt_table": "messy_streets/release-silver-low-trigrams-2-error-bars",
+          "sem": 3.2
+        },
+        "Low divergence CRR": {
+          "mean": 75.8,
+          "rebuilt_column": "Found",
+          "rebuilt_table": "messy_streets/release-silver-high-trigrams-2-error-bars",
+          "sem": 3.1
+        },
+        "Low divergence GH6": {
+          "mean": 64.4,
+          "rebuilt_column": "6",
+          "rebuilt_table": "messy_streets/release-silver-high-trigrams-2-error-bars",
+          "sem": 3.0
+        }
+      }
+    },
+    "Pelias API": {
+      "gold": {
+        "High divergence CRR": {
+          "mean": 95.3,
+          "rebuilt_column": "Found",
+          "rebuilt_table": "messy_streets/release-gold-low-trigrams-2-error-bars",
+          "sem": 1.5
+        },
+        "High divergence GH6": {
+          "mean": 59.4,
+          "rebuilt_column": "6",
+          "rebuilt_table": "messy_streets/release-gold-low-trigrams-2-error-bars",
+          "sem": 3.1
+        },
+        "Low divergence CRR": {
+          "mean": 98.2,
+          "rebuilt_column": "Found",
+          "rebuilt_table": "messy_streets/release-gold-high-trigrams-2-error-bars",
+          "sem": 0.9
+        },
+        "Low divergence GH6": {
+          "mean": 74.2,
+          "rebuilt_column": "6",
+          "rebuilt_table": "messy_streets/release-gold-high-trigrams-2-error-bars",
+          "sem": 3.9
+        }
+      },
+      "silver": {
+        "High divergence CRR": {
+          "mean": 95.5,
+          "rebuilt_column": "Found",
+          "rebuilt_table": "messy_streets/release-silver-low-trigrams-2-error-bars",
+          "sem": 1.3
+        },
+        "High divergence GH6": {
+          "mean": 57.0,
+          "rebuilt_column": "6",
+          "rebuilt_table": "messy_streets/release-silver-low-trigrams-2-error-bars",
+          "sem": 3.5
+        },
+        "Low divergence CRR": {
+          "mean": 99.3,
+          "rebuilt_column": "Found",
+          "rebuilt_table": "messy_streets/release-silver-high-trigrams-2-error-bars",
+          "sem": 0.6
+        },
+        "Low divergence GH6": {
+          "mean": 76.1,
+          "rebuilt_column": "6",
+          "rebuilt_table": "messy_streets/release-silver-high-trigrams-2-error-bars",
+          "sem": 3.4
+        }
+      }
+    }
+  }
+}

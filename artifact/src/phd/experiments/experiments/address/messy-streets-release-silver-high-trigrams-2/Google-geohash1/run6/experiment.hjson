@@ -1,0 +1,12 @@
+{
+ "model": {
+  "name": "google-geocoding",
+  "config": "geohash1"
+ },
+ "benchmark": {
+  "name": "messy_streets/release_silver_high_trigrams_2_geohash1_6",
+  "num_obs": 100,
+  "randomise": false,
+  "comparator": "istr"
+ }
+}
