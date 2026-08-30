@@ -154,9 +154,13 @@ def _check_table4(rebuilt: Dict[str, Dict[str, Dict[str, float]]]) -> List[Cell]
     reference = loads((paths.data() / "expected/table4.json").read_text(encoding="utf8"))
     source = next(iter(reference["rebuilt_from"]))
     declared = {(d["row"], d["column"]): d for d in reference.get("known_deviations", [])}
+    # The camera-ready prints seven of the twelve evaluated geocoders; the other
+    # five stay in the reference under withheld_rows but are not checked against
+    # a table that no longer shows them.
+    published = reference.get("published_rows") or list(reference["values"])
     cells = []
-    for row, columns in reference["values"].items():
-        for _, spec in columns.items():
+    for row in published:
+        for _, spec in reference["values"][row].items():
             column = spec["rebuilt_column"]
             actual = rebuilt.get(source, {}).get(column, {}).get(row)
             cells.append(Cell(4, row, column, spec["mean"], spec["sem"],

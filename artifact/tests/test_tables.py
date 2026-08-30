@@ -147,11 +147,11 @@ class ReproductionTest(unittest.TestCase):
 
     def test_covers_both_paper_tables(self):
         self.assertEqual(self.report["paper_tables"], [4, 5])
-        self.assertEqual(self.report["cells"], 48 + 32)
+        self.assertEqual(self.report["cells"], 28 + 32)
 
     def test_only_the_declared_deviations_deviate(self):
-        """78 exact, and the 2 that are not are the ones we said would not be."""
-        self.assertEqual(self.report["matched"], 78)
+        """58 exact, and the 2 that are not are the ones we said would not be."""
+        self.assertEqual(self.report["matched"], 58)
         deviating = {(d["row"], d["column"]) for d in self.report["known_deviations"]}
         self.assertEqual(deviating, {
             ("Pelias API", "Found"),

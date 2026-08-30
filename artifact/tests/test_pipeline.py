@@ -41,6 +41,16 @@ class CatalogueTest(unittest.TestCase):
 
 
 class Table2Test(unittest.TestCase):
+
+    def test_the_merged_coordinate_row_sums_its_components(self):
+        """The camera-ready merges four filters into one row; the statistics file
+        still records them separately, so the row must equal their sum."""
+        cells = {c["row"]: c for c in self.report["table2"]["cells"]}
+        merged = cells["Invalid or missing coordinates"]
+        self.assertEqual(merged["published"], 1413843)
+        self.assertEqual(sum(merged["components"].values()), merged["published"])
+        self.assertEqual(len(merged["components"]), 4)
+
     """Stage 3's statistics file is Table 2."""
 
     def setUp(self):
@@ -51,8 +61,9 @@ class Table2Test(unittest.TestCase):
         self.assertTrue(self.report["table2"]["matches"])
         self.assertEqual(self.report["table2"]["mismatches"], [])
 
-    def test_all_nine_rows_are_checked(self):
-        self.assertEqual(len(self.report["table2"]["cells"]), 9)
+    def test_every_published_row_is_checked(self):
+        """Four filter rows plus the two totals, as the camera-ready prints them."""
+        self.assertEqual(len(self.report["table2"]["cells"]), 6)
 
     def test_the_totals_are_internally_consistent(self):
         cells = {c["row"]: c["recorded"] for c in self.report["table2"]["cells"]}

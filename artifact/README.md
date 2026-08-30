@@ -132,9 +132,9 @@ pins that make runs comparable.
 | Paper table | What it is | Status |
 |-------------|------------|--------|
 | Table 1 | Representative messy addresses | Hand-picked; checkable with `inspect` (slice 4) |
-| Table 2 | WDC filtering cascade | **verifies — 9/9 cells** against the statistics stage 3 emitted |
+| Table 2 | WDC filtering cascade | **verifies — 6/6 cells** against the statistics stage 3 emitted |
 | Table 3 | Component existence across tiers | **reproduces exactly — 15/15 cells** |
-| **Table 4** | Twelve geocoders on the gold tier | **46/48 cells exact, 2 known deviations** |
+| **Table 4** | Seven of twelve geocoders on the gold tier | **26/28 cells exact, 2 known deviations** |
 | **Table 5** | CRR and GH6 by divergence and tier | **32/32 cells exact** |
 
 Tables 4 and 5 are the two the paper's findings rest on. Both are checked

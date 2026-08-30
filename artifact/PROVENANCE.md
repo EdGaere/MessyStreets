@@ -64,10 +64,13 @@ changes alter the *shape* of a table without altering any measurement:
   in the body and none held a best or worst value. Their measurements are
   unchanged and remain in `data/expected/table4.json`.
 
-The artefact's references for Tables 2 and 4 still describe the twelve-geocoder,
-seven-row-cascade form as submitted in June. Aligning them to the camera-ready
-shape is deliberately not done here: it is a decision about what the artefact
-should attest to, not a mechanical refresh.
+Both references are now aligned to the camera-ready. Table 2 is checked as four
+filter rows plus two totals, with the merged row verified against the sum of the
+four components the statistics file still records separately. Table 4 carries
+`published_rows` — the seven the paper prints — and `withheld_rows` for the five
+it does not; all twelve measurements remain in the file, and only the published
+seven are checked against the table. The artefact therefore attests to what the
+camera-ready shows, without discarding what was measured.
 
 ## Measurement drift
 

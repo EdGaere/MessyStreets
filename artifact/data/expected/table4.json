@@ -1,5 +1,5 @@
 {
-  "describes": "Candidate Return Rate and geohash accuracy of twelve geocoders on the gold tier, in percent. Mean +/- 2 SEM over 10 runs of 100 addresses.",
+  "describes": "Candidate Return Rate and geohash accuracy on the gold tier, in percent. Mean +/- 2 SEM over 10 runs of 100 addresses. Twelve geocoders were evaluated; the camera-ready prints the seven in published_rows.",
   "known_deviations": [
     {
       "column": "Found",
@@ -22,6 +22,15 @@
   ],
   "paper_label": "tab:address_gold",
   "paper_table": 4,
+  "published_rows": [
+    "Google Maps API v3",
+    "MapQuest  API",
+    "ArcGIS API",
+    "OpenCage API",
+    "Pelias API",
+    "Komoot Photon API",
+    "Nominatim API"
+  ],
   "rebuilt_from": {
     "messy_streets/release-gold-2-error-bars": "all columns"
   },
@@ -291,5 +300,15 @@
         "sem": 3.6
       }
     }
+  },
+  "withheld_rows": {
+    "rows": [
+      "Azure Maps API",
+      "Geoapify API",
+      "Here API v7",
+      "Mapbox API",
+      "TomTom API"
+    ],
+    "why": "Removed from Table 4 when the camera-ready was trimmed to four pages. None is discussed in the body and none held a best or worst value, so the sort key and the bold/underline markers are unaffected. Their measurements are unchanged and kept here: the paper shows seven of the twelve evaluated geocoders, and its caption says so."
   }
 }

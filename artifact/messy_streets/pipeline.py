@@ -25,23 +25,24 @@ from messy_streets import paths
 
 # Table 2's rows, in the order the paper prints them, mapped to the keys the
 # stage-3 statistics file uses.
+# Each published row against the stage-3 statistics keys that make it up. The
+# camera-ready reports the four coordinate filters as one row; the statistics
+# file still records them separately, so the row is checked against their sum
+# and each component stays inspectable.
 TABLE2_ROWS = [
-    ("Empty streetAddress", "Missing streetAddress"),
-    ("Missing latitude", "Missing latitude"),
-    ("Missing longitude", "Missing longitude"),
-    ("Latitude/longitude out-of-range", "latitude/longitude out-of-range"),
-    ("Latitude/longitude non-numeric", "latitude/longitude non-numeric"),
-    ("Lexical duplicates", "Duplicate rows"),
-    ("Unresolved component reference", "Unresolved streetAddress"),
+    ("Empty streetAddress", ["Missing streetAddress"]),
+    ("Invalid or missing coordinates", ["Missing latitude",
+                                        "Missing longitude",
+                                        "latitude/longitude out-of-range",
+                                        "latitude/longitude non-numeric"]),
+    ("Lexical duplicates", ["Duplicate rows"]),
+    ("Unresolved component reference", ["Unresolved streetAddress"]),
 ]
 
-# As printed in the paper.
+# As printed in the camera-ready.
 TABLE2_PUBLISHED = {
     "Empty streetAddress": 2471365,
-    "Missing latitude": 1013389,
-    "Missing longitude": 23840,
-    "Latitude/longitude out-of-range": 376614,
-    "Latitude/longitude non-numeric": 0,
+    "Invalid or missing coordinates": 1413843,
     "Lexical duplicates": 71505431,
     "Unresolved component reference": 2755292,
 }
@@ -59,12 +60,15 @@ def check_table2() -> Dict:
     dropped = stats["dropped_reasons"]
 
     cells, mismatches = [], []
-    for paper_label, stats_key in TABLE2_ROWS:
-        recorded = dropped.get(stats_key)
+    for paper_label, stats_keys in TABLE2_ROWS:
+        recorded = sum(dropped.get(key, 0) for key in stats_keys)
         published = TABLE2_PUBLISHED[paper_label]
-        cells.append({"row": paper_label, "published": published, "recorded": recorded})
+        cell = {"row": paper_label, "published": published, "recorded": recorded}
+        if len(stats_keys) > 1:
+            cell["components"] = {key: dropped.get(key) for key in stats_keys}
+        cells.append(cell)
         if recorded != published:
-            mismatches.append(cells[-1])
+            mismatches.append(cell)
 
     total = sum(dropped.values())
     for label, published, recorded in (("Total removed", TABLE2_TOTAL_REMOVED, total),
