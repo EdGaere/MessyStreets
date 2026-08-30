@@ -160,6 +160,25 @@ def cmd_geocode(args: Namespace) -> int:
                        as_json=args.json, verbose=args.verbose)
 
 
+def cmd_judges(args: Namespace) -> int:
+    from messy_streets import judges
+
+    return judges.run(n=args.n, roles=args.role, tier=args.tier,
+                      model=args.model, host=args.endpoint, timeout=args.timeout,
+                      opt_in=args.i_supply_my_own_judge,
+                      as_json=args.json, verbose=args.verbose)
+
+
+def cmd_scrape(args: Namespace) -> int:
+    from messy_streets import scrape
+
+    return scrape.run(class_names=args.klass, part=args.part,
+                      all_classes=args.all_classes, all_parts=args.all_parts,
+                      limit=args.limit_parts, timeout=args.timeout,
+                      opt_in=args.i_supply_my_own_storage,
+                      as_json=args.json, verbose=args.verbose)
+
+
 def cmd_unimplemented(args: Namespace) -> int:
     verb = verbs.load()[args.verb]
     message = (f"'{verb.name}' is not built yet — it lands in slice {verb.slice}.\n"
@@ -210,6 +229,42 @@ def build_parser() -> ArgumentParser:
             sub.add_argument("--i-supply-my-own-keys", action="store_true",
                              dest="i_supply_my_own_keys",
                              help="required to query anything; nothing runs without it")
+        if verb.name == "scrape":
+            sub.add_argument("--class", action="append", default=None, dest="klass",
+                             metavar="NAME", help="schema.org class (repeatable)")
+            sub.add_argument("--part", type=int, default=None,
+                             help="part number within the class (default 0)")
+            sub.add_argument("--all-classes", action="store_true",
+                             dest="all_classes", help="every schema.org class")
+            sub.add_argument("--all-parts", action="store_true",
+                             dest="all_parts",
+                             help="walk parts from zero until one is missing")
+            sub.add_argument("--limit-parts", type=int, default=None,
+                             dest="limit_parts",
+                             help="stop after this many parts per class")
+            sub.add_argument("--timeout", type=float, default=600.0,
+                             help="seconds to wait for one part")
+            sub.add_argument("--i-supply-my-own-storage", action="store_true",
+                             dest="i_supply_my_own_storage",
+                             help="required to download anything; nothing runs without it")
+        if verb.name == "judges":
+            from messy_streets import judges as _judges
+            sub.add_argument("-n", type=int, default=25,
+                             help="how many released records to re-judge")
+            sub.add_argument("--role", action="append", default=None,
+                             choices=list(_judges.ROLES),
+                             help="restrict to this judge role (repeatable)")
+            sub.add_argument("--tier", default="gold", choices=["gold", "silver", "raw"])
+            sub.add_argument("--model", default=_judges.DEFAULT_MODEL,
+                             help="Ollama model tag")
+            sub.add_argument("--endpoint", default=None, metavar="HOST",
+                             help="Ollama endpoint (default: $OLLAMA_HOST, "
+                                  "else 127.0.0.1:11434)")
+            sub.add_argument("--timeout", type=float, default=120.0,
+                             help="seconds to wait for one judgement")
+            sub.add_argument("--i-supply-my-own-judge", action="store_true",
+                             dest="i_supply_my_own_judge",
+                             help="required to contact a model; nothing runs without it")
         if verb.name == "pipeline":
             sub.add_argument("action", nargs="?", default="list", choices=["list", "show"])
             sub.add_argument("stage", nargs="?", type=int, default=None)
@@ -236,6 +291,8 @@ HANDLERS.update({
     "sample": cmd_sample,
     "pipeline": cmd_pipeline,
     "geocode": cmd_geocode,
+    "judges": cmd_judges,
+    "scrape": cmd_scrape,
     "shell": cmd_shell,
     "credentials": cmd_credentials,
 })

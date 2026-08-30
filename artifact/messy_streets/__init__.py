@@ -8,4 +8,4 @@ the dependencies it is checking.
 __version__ = "1.0.0"
 
 # Bumped when the shipped data changes in a way that invalidates checksums.
-DATA_REVISION = "5"
+DATA_REVISION = "6"

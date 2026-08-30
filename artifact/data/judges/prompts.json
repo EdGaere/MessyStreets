@@ -1,0 +1,179 @@
+{
+  "describes": "The LLM judge prompts used to build the tiers, stage 7. Transcribed verbatim from the prompt library and the hq_10000 filter configuration that produced the gold tier. Shipped so the judges can be re-run and so the prompts are readable without running anything.",
+  "model": {
+    "name": "qwen3.5:35b",
+    "note": "Quantised Qwen3.5 35B, served by Ollama. The paper ran it on four NVIDIA Titan V/Xp cards.",
+    "url": "https://ollama.com/library/qwen3.5:35b"
+  },
+  "system_prompts": {
+    "boolean": "Never provide a preamble like sure, of course. Do not provide an explanation. Always answer with \"Yes\" or \"No\", nothing else."
+  },
+  "chain": [
+    {
+      "role": "street",
+      "name": "street_similarity",
+      "prompt": "messy_streets_similar_street_1",
+      "inputs": {
+        "streetAddress": "street1",
+        "__reference_street__": "street2"
+      },
+      "on_yes": "keep",
+      "on_no": "discard",
+      "description": "llm similarity on matched addresses"
+    },
+    {
+      "role": "pii",
+      "name": "pid_in_pobox",
+      "prompt": "messy_streets_contains_pid_2",
+      "inputs": {
+        "postOfficeBoxNumber": "input_sequence"
+      },
+      "on_yes": "discard",
+      "on_no": "keep"
+    },
+    {
+      "role": "pii",
+      "name": "pid_in_region",
+      "prompt": "messy_streets_contains_pid_2",
+      "inputs": {
+        "addressRegion": "input_sequence"
+      },
+      "on_yes": "discard",
+      "on_no": "keep"
+    },
+    {
+      "role": "pii",
+      "name": "pid_in_locality",
+      "prompt": "messy_streets_contains_pid_2",
+      "inputs": {
+        "addressLocality": "input_sequence"
+      },
+      "on_yes": "discard",
+      "on_no": "keep"
+    },
+    {
+      "role": "pii",
+      "name": "pid_in_country",
+      "prompt": "messy_streets_contains_pid_2",
+      "inputs": {
+        "addressCountry": "input_sequence"
+      },
+      "on_yes": "discard",
+      "on_no": "keep"
+    },
+    {
+      "role": "pii",
+      "name": "pid_in_postcode",
+      "prompt": "messy_streets_contains_pid_2",
+      "inputs": {
+        "postalCode": "input_sequence"
+      },
+      "on_yes": "discard",
+      "on_no": "keep"
+    },
+    {
+      "role": "pii",
+      "name": "pid_in_street",
+      "prompt": "messy_streets_contains_pid_2",
+      "inputs": {
+        "streetAddress": "input_sequence"
+      },
+      "on_yes": "discard",
+      "on_no": "keep"
+    },
+    {
+      "role": "components",
+      "name": "valid_postcode",
+      "prompt": "messy_streets_is_missing_1",
+      "inputs": {
+        "postalCode": "input_sequence"
+      },
+      "on_yes": "discard",
+      "on_no": "keep"
+    },
+    {
+      "role": "components",
+      "name": "valid_street",
+      "prompt": "messy_streets_is_valid_street_1",
+      "inputs": {
+        "streetAddress": "input_sequence"
+      },
+      "on_yes": "keep",
+      "on_no": "discard"
+    },
+    {
+      "role": "components",
+      "name": "valid_country",
+      "prompt": "messy_streets_is_valid_country_1",
+      "inputs": {
+        "addressCountry": "input_sequence"
+      },
+      "on_yes": "keep",
+      "on_no": "discard"
+    }
+  ],
+  "templates": {
+    "messy_streets_similar_street_1": {
+      "return_type": "str",
+      "tag": "PhD / Messy Streets / Address validation",
+      "name": "Address validation: are the streets similar",
+      "system_prompt": "boolean",
+      "temperature": 0.0,
+      "max_tokens": 1024,
+      "parameters": {
+        "street1": "lhs street name",
+        "street2": "rhs street name"
+      },
+      "template": "Does this address lie on this street?\n\nAddress: {street1}\nStreet: {street2}\n\nMatch on street name only. Ignore house numbers, suite numbers, and PO boxes. Allow abbreviations (Ave/Avenue, St/Street), common misspellings, and language variants (Rue, Straße, etc.).\n\nAnswer with exactly one word: Yes or No."
+    },
+    "messy_streets_contains_pid_2": {
+      "return_type": "str",
+      "tag": "PhD / Messy Streets / Address validation",
+      "name": "Address validation: is there personaly identifiable information in the address",
+      "methodology": "Attempt to reduce false positives by allowing streets named after notable people",
+      "system_prompt": "boolean",
+      "temperature": 0.0,
+      "max_tokens": 1024,
+      "parameters": {
+        "input_sequence": "input to be analysed"
+      },
+      "template": "Here is part of an address:\n\n{input_sequence}\n\nDoes it contain personally identifiable information (PII), for example a person's name, email, social media tag or otehr PII? Streets and squares named after historical or notable figures (scientists, artists, politicians, saints, military figures, etc.) are not PII. The address identifies a public place, not a private individual. Answer with exactly one word: Yes or No."
+    },
+    "messy_streets_is_missing_1": {
+      "return_type": "str",
+      "tag": "PhD / Messy Streets / Address validation",
+      "name": "Address validation: is the data missing?",
+      "system_prompt": "boolean",
+      "temperature": 0.0,
+      "max_tokens": 1024,
+      "parameters": {
+        "input_sequence": "input sequence to be analysed"
+      },
+      "template": "Here is a part of an address:\n\n{input_sequence}\n\nIs the data missing? Examples of missing data: empty string, whitespace only, nan, null, N/A, unknown, TBD, -, ., 0, single characters, or any value that conveys absence rather than information. Answer with exactly one word: Yes or No."
+    },
+    "messy_streets_is_valid_street_1": {
+      "return_type": "str",
+      "tag": "PhD / Messy Streets / Address validation",
+      "name": "Address validation: is the street a valid street address?",
+      "system_prompt": "boolean",
+      "temperature": 0.0,
+      "max_tokens": 1024,
+      "parameters": {
+        "input_sequence": "street to be analysed"
+      },
+      "template": "Here is a street address:\n\n{input_sequence}\n\nIs it or does it contain a valid street name, or the name of likely place? Answer with exactly one word: Yes or No."
+    },
+    "messy_streets_is_valid_country_1": {
+      "return_type": "str",
+      "tag": "PhD / Messy Streets / Address validation",
+      "name": "Address validation: is the country a valid country?",
+      "system_prompt": "boolean",
+      "temperature": 0.0,
+      "max_tokens": 1024,
+      "parameters": {
+        "input_sequence": "country to be analysed"
+      },
+      "template": "Here is a country name extracted from an address:\n\n{input_sequence}\n\nIs it a valid country name or identifier? Answer with exactly one word: Yes or No."
+    }
+  }
+}

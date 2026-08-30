@@ -1,14 +1,15 @@
 # sha256 of the data the artefact's claims rest on.
 # Paths are relative to the repository root. Regenerate with:
 #   python3 tools/checksums.py
-# 8325 files
+# 8326 files
 198b7950cf0177acd1f7e2d2fb85f08f2cd6a50fcf9227d84bdaeeebc07ac38f  croissant.json
 24657aed4f49a43fe7048f32becee2ae8366b0d9c44cac2fb751caf66a4945fb  data/expected/release-gold-2-run1.json
 4b601fc3a3a70cc9508e04473c7c198960a107e926d87f6f68f2d82459bb93d4  data/expected/slice-provenance.json
 ef7a729f8e3fd84e028cf92dde33f397563bd41efc77f8cf176083c7c31399a8  data/expected/table3.json
 ec16008c49f2e76190e36d99f2b98f69f6baf068244b636686e1154b07fcdad2  data/expected/table4.json
 25ca8cc08883829eb88bdf22c5b78f774767001036a392d2497c4f4b64ec796b  data/expected/table5.json
-d6649b914095b8f3cf1049734eddbb982606742ba105d780c314d8469f6f0a4c  data/pipeline/stages.json
+6c918fdf8ed15e03b1a3917d33bd6f63a008f64cbe94e02e13cbe37ac93782f8  data/judges/prompts.json
+1b6ee9ecda705de002779a8c43757329478589445cdcfa4ccf231a1eb2b18c90  data/pipeline/stages.json
 732e916d032cd32d9e38714653879090ab1608878edfb717b9cf873b02daf824  data/pipeline/wdc-filter-stats.json
 532cc4a8ebb7a9da743adfd53b79eaaf39ccb0911dffe561c7ba20c00cc0a07a  data/tiers/gold.jsonl.gz
 1fa72a1e970ba87adcf2e65a52466ffcd2021e2cc34babfa4f942a6a771b0006  data/tiers/raw.jsonl.gz

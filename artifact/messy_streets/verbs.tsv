@@ -13,4 +13,6 @@ inspect	none	L0	4	Print records from a tier with reference address and divergenc
 sample	none	L2	5	Regenerate the benchmark slices at seed 42 and checksum them
 pipeline	none	L4	6	List, show or run the fifteen dataset-construction stages
 geocode	host	L3	7	Re-query the live geocoders (requires your own API keys)
+judges	host	L4	10	Re-run the stage-7 LLM judges on released records
+scrape	host	L4	11	Re-run stages 1-3 against Web Data Commons, bounded or whole
 shell	none	-	8	Open a prompt inside the container

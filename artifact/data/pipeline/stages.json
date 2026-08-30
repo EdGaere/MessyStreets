@@ -1,5 +1,5 @@
 {
-  "describes": "The fifteen stages that produced MESSY STREETS, from 136 billion N-Quads to two LaTeX tables. Most are documented rather than runnable: reproducing them needs 106 GB of reference data and four GPUs. Recording them is the point \u2014 the construction method is inspectable even where re-running it is not.",
+  "describes": "The fifteen stages that produced MESSY STREETS, from 136 billion N-Quads to two LaTeX tables. Most are documented rather than runnable: reproducing them needs 106 GB of reference data and four GPUs. Recording them is the point — the construction method is inspectable even where re-running it is not.",
   "stages": [
     {
       "n": 1,
@@ -12,8 +12,8 @@
       "outputs": "Class-specific N-Quad archives",
       "scale": "136.7 bn quads",
       "needs": "bulk download, days",
-      "runnable": false,
-      "note": "Third-party corpus. Not redistributed."
+      "runnable": "partially",
+      "note": "Third-party corpus. Not redistributed.  A bounded re-run is possible with `messy-streets scrape --class <name> --part <n>`, which downloads one archive rather than the corpus."
     },
     {
       "n": 2,
@@ -25,8 +25,8 @@
       "outputs": "Per-class TSV: subject, streetAddress, latitude, longitude",
       "scale": "330,646,780 records with an address; 95,014,529 with coordinates",
       "needs": "CPU only",
-      "runnable": false,
-      "note": "Needs stage 1's output."
+      "runnable": "partially",
+      "note": "Needs stage 1's output.  Re-run by `messy-streets scrape`, which carries this parser verbatim."
     },
     {
       "n": 3,
@@ -38,9 +38,9 @@
       "outputs": "dataset.jsonl.gz (908 MB) and dataset.stats.json",
       "scale": "16,868,598 retained records",
       "needs": "CPU only",
-      "runnable": false,
+      "runnable": "partially",
       "verifies": "Table 2",
-      "note": "The stats file IS Table 2. It is shipped at data/pipeline/wdc-filter-stats.json and checked by `messy-streets pipeline show 3`."
+      "note": "The stats file IS Table 2. It is shipped at data/pipeline/wdc-filter-stats.json and checked by `messy-streets pipeline show 3`.  The per-part counts a scrape reports are the same quantities this stage aggregates."
     },
     {
       "n": 4,
@@ -92,11 +92,11 @@
         "phd/datasets/address/messy_streets/v0/configs/*.hjson"
       ],
       "inputs": "wdc, oa, osd databases; Ollama endpoint",
-      "outputs": "hq_10000, mq_10000, lq_10000 \u2014 each with an addresses and a discarded table",
+      "outputs": "hq_10000, mq_10000, lq_10000 — each with an addresses and a discarded table",
       "scale": "28K candidates evaluated for 10K gold records",
       "needs": "106 GB of reference data, quantised 35B judge on 4 GPUs",
-      "runnable": false,
-      "note": "Three judge roles: street similarity, component validity, and PII \u2014 the PII judge runs six times, once per address field."
+      "runnable": "partially",
+      "note": "Three judge roles: street similarity, component validity, and PII — the PII judge runs six times, once per address field.  The judges can be re-run on released records with `messy-streets judges`, which needs an Ollama endpoint but not the 106 GB: every record ships both sides of the pair the judges saw. That checks the judges reproduce; it does not rebuild the tiers."
     },
     {
       "n": 8,
@@ -122,7 +122,7 @@
       "scale": "5 replacements for gold, 15 for silver, 2 for raw",
       "needs": "all six tier databases",
       "runnable": "partially",
-      "note": "Existed only as ~30 hand-run DuckDB statements transcribed in a readme. Written as a deterministic script for this artefact \u2014 see the directory. `messy-streets sample` shows what its absence cost: nine addresses appear in a benchmark slice but not in the released tier."
+      "note": "Existed only as ~30 hand-run DuckDB statements transcribed in a readme. Written as a deterministic script for this artefact — see the directory. `messy-streets sample` shows what its absence cost: nine addresses appear in a benchmark slice but not in the released tier."
     },
     {
       "n": 10,
@@ -149,7 +149,7 @@
       "needs": "a tier database",
       "runnable": true,
       "verifies": "Table 3, Biases paragraph",
-      "note": "`messy-streets stats` recomputes these over all 10,000 released records and disagrees with the paper \u2014 see ARTIFACT.md."
+      "note": "`messy-streets stats` recomputes these over all 10,000 released records and disagrees with the paper — see ARTIFACT.md."
     },
     {
       "n": 12,

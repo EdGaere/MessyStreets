@@ -83,6 +83,21 @@ jobs:
         env: {TZ: UTC, LANG: C.UTF-8, PYTHONHASHSEED: '0', MS_DUCKDB_THREADS: '1'}
         run: messy-streets geocode
 
+      - name: judges — plan only, never contacts a model
+        env: {TZ: UTC, LANG: C.UTF-8, PYTHONHASHSEED: '0', MS_DUCKDB_THREADS: '1'}
+        run: |
+          messy-streets judges -n 5
+          # The plan must not depend on an endpoint existing.
+          OLLAMA_HOST=http://127.0.0.1:1 messy-streets judges -n 5 --json > judges.json
+          python3 -c 'import json; p = json.load(open("judges.json")); assert p["opt_in_given"] is False, "plan claimed an opt-in"; assert p["would_run"] is False, "plan would have run"; assert p["total_calls"] > 0, "plan priced nothing"; print("judge plan: %d calls over %d steps" % (p["total_calls"], len(p["steps"])))'
+
+      - name: scrape — plan only, never downloads the corpus
+        env: {TZ: UTC, LANG: C.UTF-8, PYTHONHASHSEED: '0', MS_DUCKDB_THREADS: '1'}
+        run: |
+          messy-streets scrape --class SkiResort --part 0
+          messy-streets scrape --all-classes --all-parts --json > scrape.json
+          python3 -c 'import json; p = json.load(open("scrape.json")); assert p["opt_in_given"] is False, "plan claimed an opt-in"; assert p["would_run"] is False, "plan would have downloaded"; assert len(p["classes"]) == 50, "not all fifty classes"; assert p["whole_corpus"] is True; print("scrape plan: %d classes" % len(p["classes"]))'
+
       - name: croissant metadata validates
         run: python -m pip install mlcroissant==1.1.0 && python tools/croissant.py --check
 

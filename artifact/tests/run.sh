@@ -43,6 +43,14 @@ echo "== geocode (plan only; the live path needs the network) =="
 python3 "$HERE/test_geocode.py" 2>&1 | tail -4 || FAILED=1
 echo
 
+echo "== judges (plan, and the live path against a stubbed Ollama) =="
+python3 "$HERE/test_judges.py" 2>&1 | tail -4 || FAILED=1
+echo
+
+echo "== scrape (plan and extraction; the download needs the corpus) =="
+python3 "$HERE/test_scrape.py" 2>&1 | tail -4 || FAILED=1
+echo
+
 echo "== credentials and the secret sweep =="
 python3 "$HERE/test_credentials.py" 2>&1 | tail -4 || FAILED=1
 echo

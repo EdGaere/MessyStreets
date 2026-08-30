@@ -38,7 +38,7 @@ class Verb(NamedTuple):
 
 # Bumped as each slice lands. Verbs above this are listed but refuse to run,
 # so `messy-streets --help` always shows the whole intended surface.
-IMPLEMENTED_THROUGH = 9
+IMPLEMENTED_THROUGH = 11
 
 
 def load() -> Dict[str, Verb]:

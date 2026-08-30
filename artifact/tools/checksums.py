@@ -19,6 +19,7 @@ INCLUDE = [
     "data/tiers/*.jsonl.gz",
     "data/tiers_duckdb/*",
     "data/pipeline/*.json",
+    "data/judges/*.json",
     "croissant.json",
     "src/phd/benchmarks/**/*",
     "src/phd/experiments/**/*",

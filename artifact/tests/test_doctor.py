@@ -141,11 +141,11 @@ class CommandTableTest(unittest.TestCase):
             self.assertIn(verb.layer, {"-", "L0", "L1", "L2", "L3", "L4"}, verb)
             self.assertGreater(verb.slice, 0, verb)
 
-    def test_only_geocode_needs_the_network(self):
+    def test_only_the_three_live_verbs_need_the_network(self):
         sys.path.insert(0, str(REPO))
         from messy_streets import verbs
         networked = [v.name for v in verbs.load().values() if v.needs_network]
-        self.assertEqual(networked, ["geocode"])
+        self.assertEqual(networked, ["geocode", "judges", "scrape"])
 
     def test_only_credentials_runs_outside_the_container(self):
         """It writes a file the container is deliberately unable to reach."""
