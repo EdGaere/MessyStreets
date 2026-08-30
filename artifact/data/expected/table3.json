@@ -35,37 +35,62 @@
       "tier": "raw"
     },
     {
+      "analysis": 65.8,
+      "component": "Country",
+      "paper": 64.8,
+      "tier": "silver"
+    },
+    {
       "analysis": 65.5,
       "component": "Country",
-      "paper": 63.5,
+      "paper": 64.5,
       "tier": "raw"
+    },
+    {
+      "analysis": 83.5,
+      "component": "Postcode",
+      "paper": 85.3,
+      "tier": "silver"
     },
     {
       "analysis": 80.4,
       "component": "Postcode",
-      "paper": 82.2,
+      "paper": 82.4,
       "tier": "raw"
+    },
+    {
+      "analysis": 98.6,
+      "component": "Locality",
+      "paper": 98.7,
+      "tier": "gold"
     },
     {
       "analysis": 96.0,
       "component": "Locality",
-      "paper": 96.8,
+      "paper": 97.6,
       "tier": "silver"
     },
     {
       "analysis": 95.6,
       "component": "Locality",
-      "paper": 95.9,
+      "paper": 96.0,
       "tier": "raw"
     },
     {
-      "analysis": 73.5,
+      "analysis": 69.2,
       "component": "Region",
-      "paper": 76.3,
-      "tier": "raw"
+      "paper": 69.9,
+      "tier": "gold"
+    },
+    {
+      "analysis": 71.7,
+      "component": "Region",
+      "paper": 73.2,
+      "tier": "silver"
     }
   ],
-  "method": "Each cell is the share of records with a non-empty value, over 1,000 observations sampled from a benchmark slice -- not over the full 10,000 records of the released tier. The source database differs by tier: gold from hq_10000 and raw from lq_10000, but silver from mq_1000, a 1,000-record pre-release database rather than the released silver tier.",
+  "disagreements_describe": "The paper's own analysis outputs versus the camera-ready table. A separate lineage from the released tiers: see PROVENANCE.md. This is not a reproduction failure -- `messy-streets stats` reproduces the published table exactly.",
+  "method": "Each cell is the share of records with a non-empty value over all 10,000 records of the released tier. `messy-streets stats` recomputes these and matches the published table in all fifteen cells.",
   "paper_label": "tab:components",
   "paper_table": 3,
   "provenance": {
@@ -88,23 +113,23 @@
   "published": {
     "Country": {
       "gold": 100.0,
-      "raw": 63.5,
-      "silver": 65.8
+      "raw": 64.5,
+      "silver": 64.8
     },
     "Locality": {
-      "gold": 98.6,
-      "raw": 95.9,
-      "silver": 96.8
+      "gold": 98.7,
+      "raw": 96.0,
+      "silver": 97.6
     },
     "Postcode": {
       "gold": 100.0,
-      "raw": 82.2,
-      "silver": 83.5
+      "raw": 82.4,
+      "silver": 85.3
     },
     "Region": {
-      "gold": 69.2,
-      "raw": 76.3,
-      "silver": 71.7
+      "gold": 69.9,
+      "raw": 73.5,
+      "silver": 73.2
     },
     "Street": {
       "gold": 100.0,
@@ -112,5 +137,5 @@
       "silver": 100.0
     }
   },
-  "source": "phd/publications/messy_streets/ms.tex"
+  "source": "phd/publications/messy_streets/ms.tex (camera-ready)"
 }

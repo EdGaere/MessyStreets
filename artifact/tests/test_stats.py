@@ -83,18 +83,34 @@ class StatsTest(unittest.TestCase):
                 self.assertEqual(row["released"], 100.0, row["component"])
 
     def test_the_paper_disagrees_with_its_own_analysis(self):
-        """Six cells. Pinned so the finding cannot silently vanish."""
+        """Ten cells against the camera-ready. Pinned so it cannot silently vanish.
+
+        A separate lineage from the released tiers: the analysis scripts' own
+        outputs, kept for the record. It is not a reproduction failure — see
+        test_stats_reproduces_the_published_table and PROVENANCE.md.
+        """
         disagreements = {(d["tier"], d["component"])
                          for d in self.report["paper_vs_its_own_analysis"]}
         self.assertEqual(disagreements, {
             ("raw", "Street"), ("raw", "Country"), ("raw", "Postcode"),
-            ("raw", "Locality"), ("raw", "Region"), ("silver", "Locality"),
+            ("raw", "Locality"), ("silver", "Country"), ("silver", "Postcode"),
+            ("silver", "Locality"), ("silver", "Region"),
+            ("gold", "Locality"), ("gold", "Region"),
         })
 
-    def test_method_note_records_the_sampling(self):
+    def test_stats_reproduces_the_published_table(self):
+        """The whole point of the camera-ready refresh: 15 of 15 cells."""
+        rows = self.report["component_existence"]
+        self.assertEqual(len(rows), 15)
+        for row in rows:
+            self.assertEqual(row["released"], row["published"],
+                             f'{row["component"]}/{row["tier"]}')
+
+    def test_method_note_records_the_population(self):
+        """The camera-ready reports full-tier values, not a 1,000-record sample."""
         note = self.report["method_note"]
-        self.assertIn("1,000", note)
-        self.assertIn("mq_1000", note)
+        self.assertIn("10,000", note)
+        self.assertIn("released tier", note)
 
     def test_latin_script_shares_match_the_paper(self):
         """98% gold, 96% silver, 94% raw, to the precision the paper prints."""

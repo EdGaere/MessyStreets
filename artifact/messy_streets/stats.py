@@ -3,16 +3,15 @@
 Covers Table 3 (component existence) and the Biases paragraph (script and
 continent distributions).
 
-Table 3 needs care. The paper's numbers were not computed over the released
-tiers: each cell is a 1,000-observation sample drawn from a benchmark slice,
-and the silver row was drawn from mq_1000, a 1,000-record pre-release database
-rather than the released silver tier. Six of the fifteen cells also differ from
-the analysis outputs that the paper's own method produced.
+Table 3 reproduces exactly: recomputed over all 10,000 records of each released
+tier, all fifteen cells equal the camera-ready table.
 
-So this command reports three columns — the released tiers, the analysis
-output, and what the paper prints — rather than asserting one of them. What it
-computes is the truth about the data being released; the other two are shown
-so the difference is visible instead of buried.
+A third column is still reported. The paper's own analysis scripts emitted
+figures that differ from the published table in ten of fifteen cells, by up to
+2.0 percentage points — a separate lineage, predating the disjointness repair.
+An earlier draft of the table carried different values again. Both histories are
+in PROVENANCE.md, and the analysis column is printed rather than dropped so the
+difference stays visible instead of buried.
 """
 
 from collections import Counter

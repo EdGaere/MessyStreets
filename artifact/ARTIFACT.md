@@ -52,27 +52,17 @@ Recorded here rather than left for a reviewer to discover.
 - **Provenance paths.** `aux.address.part` retains the source corpus path from
   the machine the extraction ran on.
 
-- **Table 3 does not reproduce from the released tiers.** Three separate
-  issues, all surfaced by `messy-streets stats`:
+- **Table 3 reproduces exactly.** `messy-streets stats` recomputes component
+  existence over all 10,000 records of each released tier and equals the
+  published table in all fifteen cells.
 
-  *Method.* Each published cell is the share over 1,000 observations sampled
-  from a benchmark slice, not over the 10,000 records of the released tier.
-
-  *Provenance.* The source database differs by row: gold from `hq_10000` and
-  raw from `lq_10000`, but silver from `mq_1000` — a 1,000-record pre-release
-  database, not the released silver tier.
-
-  *Internal disagreement.* Six of the fifteen cells differ from the analysis
-  outputs that the paper's own method produced, by up to 2.8 percentage points:
-
-  | Tier | Component | Paper | Its analysis output |
-  |------|-----------|-------|---------------------|
-  | raw | Street | 100.0 | 99.9 |
-  | raw | Country | 63.5 | 65.5 |
-  | raw | Postcode | 82.2 | 80.4 |
-  | raw | Locality | 95.9 | 95.6 |
-  | raw | Region | 76.3 | 73.5 |
-  | silver | Locality | 96.8 | 96.0 |
+  Two other lineages exist and are kept rather than discarded. The paper's own
+  analysis scripts emitted figures differing from the published table in ten of
+  fifteen cells, by up to 2.0 percentage points; and an earlier draft of the
+  table, computed on a tier snapshot predating the disjointness repair, differed
+  in ten of fifteen by up to 2.8 points. Both are recorded in PROVENANCE.md,
+  with the draft values in full. `stats` prints the analysis column alongside
+  the released and published ones so the difference stays visible.
 
   `stats` reports all three figures side by side rather than choosing one. The
   qualitative claims Table 3 supports — street universal, gold complete by

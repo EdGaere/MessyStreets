@@ -133,7 +133,7 @@ pins that make runs comparable.
 |-------------|------------|--------|
 | Table 1 | Representative messy addresses | Hand-picked; checkable with `inspect` (slice 4) |
 | Table 2 | WDC filtering cascade | **verifies — 9/9 cells** against the statistics stage 3 emitted |
-| Table 3 | Component existence across tiers | **recomputed — and it does not match the paper; see below** |
+| Table 3 | Component existence across tiers | **reproduces exactly — 15/15 cells** |
 | **Table 4** | Twelve geocoders on the gold tier | **46/48 cells exact, 2 known deviations** |
 | **Table 5** | CRR and GH6 by divergence and tier | **32/32 cells exact** |
 
@@ -147,178 +147,19 @@ declared in `data/expected/table4.json` with the value the rebuild is expected
 to produce. They report as *known deviations* rather than failures, but they
 are still checked: if either changes, `tables` fails.
 
-## Table 3 does not reproduce, and that is a finding
+## Table 3 reproduces exactly
 
 `messy-streets stats` recomputes component existence over all 10,000 records of
-each released tier. It disagrees with the paper's Table 3, for three reasons
-worth stating plainly:
+each released tier and equals the published table, 15 of 15 cells.
 
-- **The paper's cells are 1,000-observation samples**, drawn from a benchmark
-  slice, not computed over the released tiers.
-- **The silver row was drawn from `mq_1000`** — a 1,000-record pre-release
-  database — while gold came from `hq_10000` and raw from `lq_10000`.
-- **Six of the fifteen cells differ from the analysis outputs the paper's own
-  method produced**, by up to 2.8 percentage points.
+An earlier draft of the table carried different values, computed on a tier
+snapshot that predates the disjointness repair. The camera-ready supersedes it,
+and both sets are recorded in [PROVENANCE.md](PROVENANCE.md) so the history is
+not lost. That file also documents the paper's own analysis outputs, a third
+lineage retained under `disagreements` in `data/expected/table3.json`.
 
-`stats` prints all three columns side by side — released, analysis output,
-published — so the difference is visible rather than resolved by fiat. The
-tests pin the six disagreeing cells so the finding cannot quietly vanish.
-
-The Biases paragraph fares better: Latin-script shares recompute to 98.4%,
+The Biases paragraph checks out too: Latin-script shares recompute to 98.4%,
 96.3% and 93.8%, which round to the published 98/96/94.
-
-## Re-running the LLM judges
-
-Three LLM judges built the gold tier: one asks whether a WDC address and the
-street it matched are the same street, one checks that the components are
-usable, and one looks for personally identifiable information — six times, once
-per address field. Ten judge calls per candidate record, 28K candidates.
-
-Re-running *that* would mean rebuilding the tiers, which needs 106 GB of
-OpenAddresses and OpenStreetMap reference data and a quantised 35B model on four
-GPUs. The artefact does not pretend otherwise.
-
-But the judges can be re-run on the records that were released, because every
-record ships both sides of the pair the judge saw — the verbatim WDC address in
-`aux.address` and the matched OA/OSM street in `aux.existence`. That costs an
-Ollama endpoint and a few minutes:
-
-```sh
-./messy-streets judges -n 25                       # plan: steps, calls, model, endpoint
-./messy-streets judges -n 25 --i-supply-my-own-judge
-```
-
-The prompts are shipped verbatim in `data/judges/prompts.json`, together with the
-filter chain that used them, transcribed from the build configuration that
-produced the gold tier. You can read what the judges were asked without running
-anything.
-
-**What a re-run establishes, and what it does not.** Every released record
-survived the filter chain, so the expected verdict for each one is `keep`. The
-verb reports agreement per judge step and names the records that disagree. High
-agreement means the judge still says what it said when the tiers were built. It
-does **not** mean the tiers can be reconstructed — that is stage 7 in full, and
-it stays out of reach.
-
-An actual run, ten gold-tier records against `qwen3.8:27b` — a *different*
-model from the `qwen3.5:35b` the paper used, which is the harder test:
-
-```
-  judge step           asked  agree  differ  unparsed  skipped  error   agreement
-  street_similarity       10      9       1         0        0      0    90.0%
-  pid_in_pobox             0      0       0         0       10      0       --
-  pid_in_region            7      7       0         0        3      0   100.0%
-  pid_in_locality          9      9       0         0        1      0   100.0%
-  pid_in_country          10     10       0         0        0      0   100.0%
-  pid_in_postcode         10     10       0         0        0      0   100.0%
-  pid_in_street           10     10       0         0        0      0   100.0%
-  valid_postcode          10     10       0         0        0      0   100.0%
-  valid_street            10     10       0         0        0      0   100.0%
-  valid_country           10     10       0         0        0      0   100.0%
-  all steps               86     85       1         0       14      0    98.8%
-
-  1 disagreement(s):
-    street_similarity      record 4     said discard  車屋御池下ル梅屋町358 アーバネックス御池ビル　Ｂ１Ｆ
-```
-
-98.8% agreement across 86 calls, in about five minutes. The single disagreement
-is worth reading rather than dismissing: a Kyoto address written in the
-traditional intersection style (*Kurumaya-Oike-sagaru*, "south of the
-Kurumaya/Oike crossing") matched against the street `御池通`. The paper's judge
-accepted it; this one rejects it. That is a real difference of judgement on a
-genuinely hard non-Latin address, which is what the verb exists to surface.
-
-`skipped` is a field the record does not carry — `postOfficeBoxNumber` is absent
-throughout the gold tier, and the original chain did not send those to the judge
-either. Nothing is skipped silently, and a step that asked nothing reports `--`
-rather than 0%.
-
-### Setup
-
-You supply the model; the artefact supplies the prompts.
-
-```sh
-ollama pull qwen3.5:35b                    # ~20 GB
-./messy-streets judges --endpoint gpu01:11434 --i-supply-my-own-judge
-```
-
-The endpoint comes from `--endpoint`, else `$OLLAMA_HOST`, else
-`127.0.0.1:11434`. `--role street|components|pii` restricts which judges run;
-`--model` points at a different tag if you want to ask a different model the
-same questions — which is a legitimate experiment, and not a reproduction.
-
-Templates are pinned at temperature 0, so a disagreement is drift or a genuine
-difference of judgement rather than sampling noise. Like `geocode`, this verb
-needs the network, so CI runs the plan rather than a real model. Everything
-between a released record and the model — request shape, answer parsing,
-verdict mapping, skipping, error counting, proxy bypass — is driven against a
-stubbed Ollama in `tests/test_judges.py`. What no test can cover is what a real
-35B model answers, which is the thing the verb exists to find out.
-
-## Re-scraping Web Data Commons
-
-Stage 1 downloads the December 2024 WDC corpus: fifty schema.org classes, each
-split into parts numbered from zero — 136.7 billion quads, days of transfer, and
-a corpus this artefact is not allowed to redistribute. Stage 2 parses the quads
-and joins each address to its coordinates; stage 3 applies the filter cascade in
-Table 2.
-
-Re-running all of that is unrealistic. Re-running *one part of one class* is not:
-
-```sh
-./messy-streets scrape --class SkiResort --part 0                  # plan
-./messy-streets scrape --class SkiResort --part 0 --i-supply-my-own-storage
-```
-
-That downloads one archive, parses it with the same extraction the paper used,
-and reports what came out:
-
-```
-  class       part         quads  unparsed   street    +geo   status
-  SkiResort      0     1,173,165         0    6,909   2,734   ok
-```
-
-1.17 million quads in about six seconds, no parse failures, 2,734 addresses that
-resolve to both a street and a coordinate. Those are the quantities stage 3
-aggregates into Table 2's cascade — for one part, not for the corpus.
-
-### Bounded, or the whole thing
-
-```sh
---class <name> --part <n>     one archive; minutes
---class <name> --all-parts    every part of one class, walking until one is missing
---all-classes --all-parts     the corpus, if you mean it
-```
-
-`--all-parts` finds the end of a class the way the original did, by requesting
-parts from zero until the mirror returns nothing. `--limit-parts` caps that.
-Naming no class at all is refused rather than assumed to mean everything.
-
-The mirror throttles concurrent requests, which is why the construction
-pipeline used its own downloader rather than plain wget. That retry policy is
-carried in `messy_streets/fetch.py` — the same constants, the same status codes,
-the same exponential backoff on 429. It is a port rather than the file itself:
-`wget.py` is built on `requests`, and this CLI is stdlib-only so `doctor` can
-diagnose a broken dependency install. A 403 or 404 means *no such part* and is
-never retried, which is how the part walk finds the end of a class.
-
-The plan states the extent, the URLs and a rough size before anything is
-fetched, and needs no network to produce. `--all-classes --all-parts` prints an
-explicit warning that this is hundreds of gigabytes over days, and suggests a
-single part first. Nothing is downloaded without `--i-supply-my-own-storage`,
-and output goes under `--out`, never into `data/`.
-
-### What it does and does not establish
-
-It re-runs stages 1–3 on what you asked for: download, parse, join. It does not
-rebuild the tiers — that is stage 7, which additionally needs 106 GB of
-OpenAddresses and OpenStreetMap reference data and the judges. And the corpus
-belongs to Web Data Commons; the artefact links to it rather than shipping it.
-
-CI runs the plan, which needs no network. The extraction is tested against a
-fixture that pins the join rule, the literal unescaping and the coordinate
-normalisation, because a re-scrape that parsed differently would not be
-reproducing anything.
 
 ## Where the API keys live
 
@@ -351,6 +192,9 @@ need a key; Nominatim, Photon and ArcGIS do not, so the geocoders the paper's
 findings concern work with no credentials at all.
 
 ## Measuring drift instead of failing to reproduce
+
+Geocoder results in the paper were measured in June 2026; live re-runs will
+differ as providers update their services and data.
 
 A live re-run cannot match the paper — the services and the OpenStreetMap
 snapshots behind the open-source ones have moved since June 2026. So `geocode`
