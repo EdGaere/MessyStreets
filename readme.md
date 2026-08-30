@@ -54,9 +54,36 @@ The raw tier is sampled randomly from the retained WDC records, subject only to 
 | Room No. 47A 3rd Floor 54/56 Ramwadi Kalbadevi Road | India | Search Result | Maharashtra | 400002 |
 | 2406 De Soto Ave Unit A | US | Savannah | GA | | 31401 |
 
+## Measurement notes
+All results are point-in-time measurements (June 2026) of publicly
+accessible endpoints, queried through free-tier, academic, or
+personal accounts. Each geocoder was used out-of-the-box with
+default settings: verbatim address strings submitted to the
+free-text endpoint, with no provider-specific configuration,
+tuning, or query preprocessing. Results describe behaviour on this
+benchmark only and may differ as providers update their services.
+Product names are trademarks of their respective owners.
 
-### Main Paper
-In progress...
+## Citation
+If you use MESSY STREETS, please cite:
 
-### Citation
-In progress...
+    Edward Gaere and Florian von Wangenheim. 2026. MESSY STREETS: A
+    Benchmark for Geocoding Real-World Addresses. In Proceedings of
+    the 34th ACM International Conference on Advances in Geographic
+    Information Systems (SIGSPATIAL '26), November 3–6, 2026,
+    Riverside, CA, USA. ACM. https://doi.org/10.1145/3841645.3843362
+
+BibTeX:
+
+    @inproceedings{gaere2026messystreets,
+      author    = {Edward Gaere and Florian von Wangenheim},
+      title     = {{MESSY STREETS}: A Benchmark for Geocoding
+                   Real-World Addresses},
+      booktitle = {Proceedings of the 34th ACM International
+                   Conference on Advances in Geographic Information
+                   Systems (SIGSPATIAL '26)},
+      year      = {2026},
+      publisher = {ACM},
+      address   = {Riverside, CA, USA},
+      doi       = {10.1145/3841645.3843362}
+    }
