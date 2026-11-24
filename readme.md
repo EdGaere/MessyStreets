@@ -64,6 +64,9 @@ tuning, or query preprocessing. Results describe behaviour on this
 benchmark only and may differ as providers update their services.
 Product names are trademarks of their respective owners.
 
+## Errata
+Corrections to the ground truth are listed in [`errata/`](errata/README.md). They cover 31 Canadian records checked against Canada's National Address Register and 89 US records checked against the US Census geocoder. [`errata/geocoder_ca_results.md`](errata/geocoder_ca_results.md) has a third-party test of geocoder.ca, which the paper did not evaluate, using the paper's scoring.
+
 ## Citation
 If you use MESSY STREETS, please cite:
 
