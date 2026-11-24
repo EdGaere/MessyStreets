@@ -69,4 +69,4 @@ These records are not in the CSV files, because their `target` may be right. A s
 
 ## Disclosure
 
-These files were prepared by Geolytica, which runs geocoder.ca, one of the geocoders evaluated in the paper. Every correction rests on an official source (the Canadian register or the US Census geocoder), not on geocoder.ca's answers. Its answers appear in the evidence column only as supporting evidence. On the corrected points, geocoder.ca's score rises from 84.1% to 86.4% on the Canadian records and from 82.9% to 83.4% on the US records.
+These files were prepared by Geolytica, which runs geocoder.ca and geocode.xyz. Neither was evaluated in the paper; we tested geocoder.ca against the benchmark ourselves (see `geocoder_ca_results.md`). Every correction rests on an official source (the Canadian register or the US Census geocoder), not on geocoder.ca's answers. Its answers appear in the evidence column only as supporting evidence.
