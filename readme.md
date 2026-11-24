@@ -64,6 +64,9 @@ tuning, or query preprocessing. Results describe behaviour on this
 benchmark only and may differ as providers update their services.
 Product names are trademarks of their respective owners.
 
+## Errata
+Corrections to the ground truth are listed in [`errata/`](errata/README.md). The first file covers 31 Canadian records checked against Canada's National Address Register.
+
 ## Citation
 If you use MESSY STREETS, please cite:
 
