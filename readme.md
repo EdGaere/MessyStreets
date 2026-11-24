@@ -65,7 +65,7 @@ benchmark only and may differ as providers update their services.
 Product names are trademarks of their respective owners.
 
 ## Errata
-Corrections to the ground truth are listed in [`errata/`](errata/README.md). The first file covers 31 Canadian records checked against Canada's National Address Register.
+Corrections to the ground truth are listed in [`errata/`](errata/README.md). They cover 31 Canadian records checked against Canada's National Address Register and 89 US records checked against the US Census geocoder.
 
 ## Citation
 If you use MESSY STREETS, please cite:
